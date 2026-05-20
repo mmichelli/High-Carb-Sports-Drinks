@@ -210,6 +210,16 @@
   .badge.warn { background: var(--warn-soft); color: var(--warn); }
   .badge.danger { background: var(--danger-soft); color: var(--danger); }
 
+  .card.extra {
+    max-width: 1100px;
+    margin: 0 auto 16px;
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  @media (min-width: 1148px) {
+    .card.extra { margin-left: auto; margin-right: auto; }
+  }
+  .card.extra h2 { margin-top: 4px; }
   details.ref {
     max-width: 1100px;
     margin: 0 auto 48px;
@@ -323,14 +333,14 @@
     </div>
 
     <div class="field">
-      <label class="lbl" for="caffeine">Caffeine plan</label>
+      <label class="lbl" for="caffeine">Caffeine plan (coffee-based)</label>
       <select id="caffeine">
         <option value="none">None</option>
         <option value="low" selected>Low (3 mg/kg total)</option>
         <option value="mid">Moderate (4.5 mg/kg total)</option>
         <option value="high">High (6 mg/kg total)</option>
       </select>
-      <span class="hint">Split as ~half pre-start, ~half at the 1:30&ndash;2:00 mark.</span>
+      <span class="hint">~half from a cup of coffee pre-start, ~half from instant-coffee crystals stirred into late-race bottles. 1 tsp instant coffee &approx; 60 mg; 1 mug brewed &approx; 95 mg.</span>
     </div>
   </section>
 
@@ -383,6 +393,58 @@
     </div>
   </section>
 </main>
+
+<section class="card extra" id="gut">
+  <h2>Getting your gut ready</h2>
+  <p class="strategy">The intestinal carb transporters (SGLT1 for glucose, GLUT5 for fructose) upregulate with repeated exposure during exercise. Start 6&ndash;10 weeks before race day and ramp on your long runs at goal pace.</p>
+  <table class="ing">
+    <thead><tr><th>Phase</th><th class="num">Long-run carb target</th><th class="num">Drink %</th><th>What to practice</th></tr></thead>
+    <tbody>
+      <tr><td>Weeks 1&ndash;2</td><td class="num">30 g/h</td><td class="num">6 %</td><td>Drink on time (every 15&ndash;20 min). Get used to swallowing while breathing hard.</td></tr>
+      <tr><td>Weeks 3&ndash;4</td><td class="num">45&ndash;60 g/h</td><td class="num">6&ndash;8 %</td><td>Add salt to taste. Practice grabbing the bottle without breaking pace.</td></tr>
+      <tr><td>Weeks 5&ndash;6</td><td class="num">60&ndash;75 g/h</td><td class="num">8 %</td><td>One long run at marathon pace with race-day breakfast.</td></tr>
+      <tr><td>Weeks 7&ndash;8</td><td class="num">75&ndash;90 g/h</td><td class="num">8&ndash;10 %</td><td>Full dress rehearsal: bottle, salt, coffee timing, exact recipe.</td></tr>
+      <tr><td>Weeks 9+ (advanced)</td><td class="num">90&ndash;100 g/h</td><td class="num">10&ndash;12 %</td><td>Concentrated flask + plain-water chase. Only if you tolerated week 7&ndash;8 cleanly.</td></tr>
+    </tbody>
+  </table>
+  <div class="notes">
+    <div class="note ok"><strong>Key rules.</strong> Train the gut at <em>race intensity</em>, not just easy runs. Always pair gut-training sessions with the planned race-day breakfast. Never introduce a new fuel in the last 2 weeks before race day.</div>
+    <div class="note warn"><strong>If you get GI distress</strong> (bloating, cramping, nausea, urgent diarrhea): drop one phase back, hold for another 2 weeks, then try again. Don't push through — concentrated carbs hitting a non-emptying stomach makes it worse.</div>
+    <div class="note ok"><strong>Race-week tapering.</strong> 3 days out: low-fiber meals (no whole grains, no salads, no bran, no beans). Carbohydrate-load to ~8&ndash;10 g/kg/day. The day before: low-fat, mostly white rice/pasta/bread/potato.</div>
+  </div>
+</section>
+
+<section class="card extra" id="bicarb">
+  <h2>Sodium bicarbonate (optional)</h2>
+  <p class="strategy">Plain baking soda (NaHCO<sub>3</sub>) buffers blood acidity and can squeeze out a few percent of performance &mdash; strongest evidence is at higher relative intensities (5k&ndash;10k pace). For a marathon, benefit is smaller and more individual; only worth it if you'll be running near 80&nbsp;% V&#775;O<sub>2</sub>max and have practiced it.</p>
+
+  <h3 style="margin:8px 0 6px; font-size:0.95rem;">Dose &amp; timing for your body mass</h3>
+  <table class="ing">
+    <thead><tr><th>Protocol</th><th class="num">Sodium bicarb dose</th><th class="num">For <span id="b-mass">70</span> kg</th><th>When</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Conservative (lower GI risk)</td>
+        <td class="num">0.2 g/kg</td>
+        <td class="num" id="b-cons">14 g (~2&frac34; tsp)</td>
+        <td>Split-dose: half 180 min pre-start, half 90 min pre-start, both <em>with</em> a carb-rich meal.</td>
+      </tr>
+      <tr>
+        <td>Standard (most studied)</td>
+        <td class="num">0.3 g/kg</td>
+        <td class="num" id="b-std">21 g (~4 tsp)</td>
+        <td>Split-dose: 3&ndash;4 portions every 30&ndash;40 min, finishing 60&ndash;90 min before start, each with food.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="strategy" style="margin-top:6px;">1 level teaspoon of baking soda &approx; 5&ndash;6 g. Dissolve in ~250 ml water; chase each dose with another ~250 ml plain water and food (a bagel, banana, oats).</p>
+
+  <div class="notes">
+    <div class="note danger"><strong>GI risk is real.</strong> Common: bloating, nausea, diarrhea, vomiting. Mitigate by (1) split-dosing, (2) taking with carb-rich food, (3) drinking plenty of water, (4) starting at 0.2 g/kg the first 2&ndash;3 times you trial it. <strong>Never race-day-debut bicarb.</strong> Practice it 3&ndash;5 times on long runs first.</div>
+    <div class="note warn"><strong>Skip bicarb if</strong> you have high blood pressure, kidney issues, or a history of bicarb-induced GI distress that didn't resolve with practice. The extra sodium (about 1100&nbsp;mg sodium per 3&nbsp;g of baking soda) also stacks on top of your in-race sodium plan &mdash; don't double up.</div>
+    <div class="note ok"><strong>How to take it.</strong> Mix the dose into a glass of water (it fizzes/tastes salty &mdash; lemon juice helps). Drink with your pre-race meal. The buffering peak is roughly 90&ndash;180 min after the last dose, which is why split-loading 60&ndash;180 min pre-start works.</div>
+    <div class="note ok"><strong>Marathon context.</strong> Bicarb's evidence base is strongest for 1&ndash;10 min all-out efforts; for the marathon, expect a smaller and more individual benefit. If your goal pace is conversational, the GI risk likely outweighs the gain &mdash; skip it.</div>
+  </div>
+</section>
 
 <details class="ref">
   <summary>Reference tables &amp; science notes</summary>
@@ -498,20 +560,12 @@
 
   // ---------- recipe selection ----------
   // Pick target drink-concentration (%) for a given hourly carb target.
+  // Sucrose-only — no hydrogel — so we cap below Maurten territory.
   function pickConcentration(carbsPerHour) {
     if (carbsPerHour <= 45) return 6;
-    if (carbsPerHour <= 80) return 8;
-    if (carbsPerHour <= 100) return 14;
-    return 18;
-  }
-
-  // Decide sucrose/dextrose split given a carbs/h intensity.
-  // Returns dextrose share of total carbs (rest is sucrose).
-  function dextroseShare(carbsPerHour) {
-    if (carbsPerHour <= 50) return 0.0;           // sucrose alone
-    if (carbsPerHour <= 70) return 0.15;          // light tilt
-    if (carbsPerHour <= 90) return 0.25;          // Recipe B
-    return 0.33;                                  // Recipe C
+    if (carbsPerHour <= 70) return 8;
+    if (carbsPerHour <= 90) return 10;
+    return 12;
   }
 
   // ---------- main compute ----------
@@ -545,10 +599,10 @@
     const bottleCount = Math.max(1, Math.ceil(drinkMlTotal / bottleMl));
     const actualBottleMl = drinkMlTotal / bottleCount;          // per bottle
 
-    // ingredient split
-    const dShare = dextroseShare(carbsPerHour);
-    const dextroseTotal = totalCarbs * dShare;
-    const sucroseTotal = totalCarbs * (1 - dShare);
+    // ingredient split — household-only: sucrose carries all carbs
+    const sucroseTotal = totalCarbs;
+    const dextroseTotal = 0;
+    const dShare = 0;
 
     // sodium / salt per drink liter, with cap
     const SALT_CAP_PER_L = 2.5;                                 // g salt
@@ -629,17 +683,17 @@
     // recipe header
     let recipeName, strategy;
     if (r.concPct <= 6) {
-      recipeName = "Recipe A — Recreational 6 % isotonic";
-      strategy = "Drink the homemade mix throughout. Fast gastric emptying. Sucrose-only is fine at this rate.";
+      recipeName = "Simple 6 % isotonic — sugar + salt";
+      strategy = "Drink the mix throughout. Fast gastric emptying. Sucrose alone gives a natural 1:1 glucose:fructose ratio in the gut.";
+    } else if (r.concPct <= 8) {
+      recipeName = "Simple 8 % — sugar + salt";
+      strategy = "Top of the fast-emptying zone. Still pure household sugar — the 50:50 split of sucrose into glucose + fructose covers two intestinal transporters.";
     } else if (r.concPct <= 10) {
-      recipeName = "Recipe B — Intermediate " + r.concPct + " % balanced";
-      strategy = "Top of the fast-emptying zone. Sucrose + a touch of dextrose pushes the glucose side past SGLT1 saturation.";
-    } else if (r.concPct <= 14) {
-      recipeName = "Recipe B/C hybrid — " + r.concPct + " % + water chase";
-      strategy = "Maurten Drink Mix territory. Sip the bottle, chase 100–150 ml plain water from aid stations every ~20 min.";
+      recipeName = "Concentrated 10 % — sugar + salt + water chase";
+      strategy = "Sip the bottle and chase 100–150 ml plain water from aid stations every ~20 min to keep gastric emptying fast.";
     } else {
-      recipeName = "Recipe C — Concentrated 18 % flask";
-      strategy = "Carry concentrated flask(s); sip ~25–30 % of a flask every 20–25 min and chase with ~100–150 ml plain water from aid stations. Requires gut training.";
+      recipeName = "Concentrated 12 % flask — sugar + salt + water chase";
+      strategy = "Carry concentrated flask(s); sip ~25–30 % every 20–25 min and chase with 100–150 ml plain water from aid stations. Requires gut training.";
     }
     $("r-name").textContent = recipeName;
     $("r-strategy").textContent = strategy;
@@ -676,19 +730,20 @@
       total: fmt(r.saltTotalG, 1) + " g",
     });
     rows.push({
-      name: "Citric acid or lemon juice",
-      perBottle: "pinch / ~5 ml",
-      perLiter: "~1 g / 15 ml",
+      name: "Lemon juice (optional, for flavor)",
+      perBottle: "~5 ml (1 tsp)",
+      perLiter: "~15 ml (1 tbsp)",
       total: "to taste",
     });
     if (r.caffeineTotal > 0) {
-      // place ~half across the bottles for the in-race share (assume half pre-race, half in-race)
+      // ~half across the bottles for the in-race share (other half is pre-race coffee)
       const inRaceCaff = r.caffeineTotal * 0.5;
+      const tspPerBottle = (inRaceCaff / r.bottleCount) / 60; // 1 tsp instant coffee ≈ 60 mg
       rows.push({
-        name: "Caffeine in-bottle (optional)",
-        perBottle: fmt(inRaceCaff / r.bottleCount, 0) + " mg",
+        name: "Instant coffee in-bottle",
+        perBottle: fmt(tspPerBottle, 1) + " tsp (~" + fmt(inRaceCaff / r.bottleCount, 0) + " mg)",
         perLiter: "—",
-        total: fmt(inRaceCaff, 0) + " mg (other half pre-race)",
+        total: fmt(inRaceCaff, 0) + " mg (other half = 1 coffee pre-race)",
       });
     }
     if (r.extraWaterMl > 25) {
@@ -722,7 +777,13 @@
     if (r.carbsPerHour >= 90) {
       notes.push({
         cls: "warn",
-        text: "At ≥ 90 g/h you need multiple transportable carbs and a 4–10 week gut-training ramp. Rehearse the exact recipe at race pace at least 4–6 times before the marathon."
+        text: "At ≥ 90 g/h you're approaching the fructose-absorption ceiling. Sucrose already gives you the 1:1 glucose:fructose split you need, but only gut-trained athletes tolerate this rate. Rehearse the exact recipe at race pace ≥ 4–6 times before the marathon."
+      });
+    }
+    if (r.carbsPerHour >= 105) {
+      notes.push({
+        cls: "warn",
+        text: "Above ~100 g/h, the 1:1 ratio from sucrose alone reaches GLUT5 saturation. To push higher you'd need to add pure fructose powder (not a pantry item) — keep sucrose-only intake ≤ ~100 g/h."
       });
     }
     if (r.concPct > 10) {
@@ -766,6 +827,13 @@
     $("r-notes").innerHTML = notes.map(function (n) {
       return "<div class=\"note " + n.cls + "\">" + n.text + "</div>";
     }).join("");
+
+    // bicarb dose figures (scale with body mass)
+    const consG = r.mass * 0.2;
+    const stdG = r.mass * 0.3;
+    $("b-mass").textContent = fmt(r.mass);
+    $("b-cons").textContent = fmt(consG, 0) + " g (~" + (consG / 5).toFixed(1) + " tsp)";
+    $("b-std").textContent = fmt(stdG, 0) + " g (~" + (stdG / 5).toFixed(1) + " tsp)";
   }
 
   // ---------- wiring ----------
