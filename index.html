@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Marathon Drink Calculator</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #5c5c5c;
+    --line: #e5e3dd;
+    --accent: #b8451f;
+    --accent-soft: #fdeee6;
+    --ok: #1f7a3a;
+    --ok-soft: #e7f5ec;
+    --warn: #a06b00;
+    --warn-soft: #fdf4d6;
+    --danger: #a8261d;
+    --danger-soft: #fbe9e7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 28px 24px 8px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 1.6rem;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 24px 32px;
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1.3fr);
+    gap: 24px;
+  }
+  @media (max-width: 820px) {
+    main { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+  }
+  .card h2 {
+    margin: 0 0 14px;
+    font-size: 1.05rem;
+    letter-spacing: -0.005em;
+  }
+  .field { margin-bottom: 14px; }
+  .field label.lbl {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .field .hint {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 4px;
+  }
+  input[type="number"], select {
+    font: inherit;
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink);
+  }
+  input[type="number"]:focus, select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+  .radios { display: grid; gap: 6px; }
+  .radios.cols-2 { grid-template-columns: 1fr 1fr; }
+  .radios.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .radios label {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    background: #fff;
+  }
+  .radios label:hover { background: #faf8f3; }
+  .radios input { margin-top: 2px; }
+  .radios label.selected {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .check {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fff;
+  }
+  .stat .k {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+  .stat .v {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .stat .sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .recipe {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    margin-top: 6px;
+  }
+  .recipe h3 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+  }
+  .recipe .strategy {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 12px;
+  }
+  table.ing {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  table.ing th, table.ing td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  table.ing th {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  table.ing td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .notes { margin-top: 12px; }
+  .note {
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    border: 1px solid;
+  }
+  .note.ok { background: var(--ok-soft); border-color: #c2e3cd; color: #134d23; }
+  .note.warn { background: var(--warn-soft); border-color: #ecd989; color: #5a3d00; }
+  .note.danger { background: var(--danger-soft); border-color: #f1c2bc; color: #6a160f; }
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 6px;
+  }
+  .badge.ok { background: var(--ok-soft); color: var(--ok); }
+  .badge.warn { background: var(--warn-soft); color: var(--warn); }
+  .badge.danger { background: var(--danger-soft); color: var(--danger); }
+
+  details.ref {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  details.ref summary {
+    cursor: pointer;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  details.ref[open] summary { border-radius: 10px 10px 0 0; }
+  details.ref .ref-body {
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    padding: 16px 18px;
+    background: var(--card);
+    font-size: 0.9rem;
+  }
+  details.ref h3 { margin: 16px 0 6px; font-size: 0.95rem; }
+  details.ref h3:first-child { margin-top: 0; }
+  details.ref table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+    margin: 6px 0 12px;
+  }
+  details.ref th, details.ref td {
+    text-align: left;
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  details.ref th {
+    background: #faf8f3;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  details.ref p { margin: 6px 0; color: var(--muted); }
+  details.ref ul { margin: 6px 0 12px 18px; padding: 0; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Marathon Drink Calculator</h1>
+  <p>Plan a homemade high-carb sports drink from pantry ingredients (sugar, dextrose, salt) for race day.</p>
+</header>
+
+<main>
+  <section class="card" id="inputs">
+    <h2>Your race</h2>
+
+    <div class="field">
+      <label class="lbl" for="mass">Body mass (kg)</label>
+      <input type="number" id="mass" min="35" max="150" step="1" value="70">
+    </div>
+
+    <div class="field">
+      <label class="lbl">Goal finish time</label>
+      <div class="row">
+        <input type="number" id="hours" min="2" max="7" step="1" value="4" aria-label="Hours">
+        <input type="number" id="minutes" min="0" max="59" step="1" value="0" aria-label="Minutes">
+      </div>
+      <span class="hint">Hours and minutes</span>
+    </div>
+
+    <div class="field">
+      <label class="lbl">Experience &amp; gut tolerance</label>
+      <div class="radios" id="level">
+        <label><input type="radio" name="level" value="beginner"><span><strong>Beginner</strong> &middot; first marathon or &gt;4:30 &middot; 30 g/h</span></label>
+        <label><input type="radio" name="level" value="recreational" checked><span><strong>Recreational</strong> &middot; 3:45&ndash;4:30 &middot; 45&ndash;60 g/h</span></label>
+        <label><input type="radio" name="level" value="subelite"><span><strong>Sub-elite</strong> &middot; 3:00&ndash;3:45 &middot; 60&ndash;90 g/h</span></label>
+        <label><input type="radio" name="level" value="elite"><span><strong>Elite</strong> &middot; sub-3:00, gut-trained &middot; 90&ndash;120 g/h</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="carbs">Hourly carb target (g/h)</label>
+      <input type="number" id="carbs" min="20" max="130" step="5" value="55">
+      <span class="hint">Auto-set from level; adjust within your tolerance.</span>
+    </div>
+
+    <div class="field">
+      <label class="lbl">Race-day temperature</label>
+      <div class="radios cols-3" id="temp">
+        <label><input type="radio" name="temp" value="cool"><span><strong>Cool</strong><br><span class="hint">&lt; 12 &deg;C</span></span></label>
+        <label><input type="radio" name="temp" value="mild" checked><span><strong>Mild</strong><br><span class="hint">12&ndash;20 &deg;C</span></span></label>
+        <label><input type="radio" name="temp" value="hot"><span><strong>Hot</strong><br><span class="hint">&gt; 20 &deg;C</span></span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="lbl">Sweat profile</label>
+      <div class="radios cols-2" id="sweat">
+        <label><input type="radio" name="sweat" value="normal" checked><span><strong>Average</strong> &middot; no visible salt stains</span></label>
+        <label><input type="radio" name="sweat" value="salty"><span><strong>Salty</strong> &middot; salt rings, cramp history</span></label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="bottle">Bottle / flask volume (ml)</label>
+      <input type="number" id="bottle" min="100" max="1000" step="50" value="500">
+      <span class="hint">Typical handheld 500&nbsp;ml; soft flask 250&nbsp;ml; vest bottle 600&nbsp;ml.</span>
+    </div>
+
+    <div class="field">
+      <label class="lbl" for="caffeine">Caffeine plan</label>
+      <select id="caffeine">
+        <option value="none">None</option>
+        <option value="low" selected>Low (3 mg/kg total)</option>
+        <option value="mid">Moderate (4.5 mg/kg total)</option>
+        <option value="high">High (6 mg/kg total)</option>
+      </select>
+      <span class="hint">Split as ~half pre-start, ~half at the 1:30&ndash;2:00 mark.</span>
+    </div>
+  </section>
+
+  <section class="card" id="outputs">
+    <h2>Your plan</h2>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="k">Carbs</div>
+        <div class="v" id="o-carbs">&mdash;</div>
+        <div class="sub" id="o-carbs-total"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Fluid</div>
+        <div class="v" id="o-fluid">&mdash;</div>
+        <div class="sub" id="o-fluid-total"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Sodium</div>
+        <div class="v" id="o-sodium">&mdash;</div>
+        <div class="sub" id="o-sodium-total"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Drink concentration</div>
+        <div class="v" id="o-conc">&mdash;</div>
+        <div class="sub" id="o-conc-sub"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Glucose : fructose</div>
+        <div class="v" id="o-ratio">&mdash;</div>
+        <div class="sub" id="o-ratio-sub"></div>
+      </div>
+      <div class="stat">
+        <div class="k">Bottles to carry</div>
+        <div class="v" id="o-bottles">&mdash;</div>
+        <div class="sub" id="o-bottles-sub"></div>
+      </div>
+    </div>
+
+    <div class="recipe">
+      <h3 id="r-name">&mdash;</h3>
+      <div class="strategy" id="r-strategy"></div>
+      <table class="ing">
+        <thead>
+          <tr><th>Ingredient</th><th class="num">Per bottle</th><th class="num">Per liter</th><th class="num">Total race</th></tr>
+        </thead>
+        <tbody id="r-ing"></tbody>
+      </table>
+      <div class="notes" id="r-notes"></div>
+    </div>
+  </section>
+</main>
+
+<details class="ref">
+  <summary>Reference tables &amp; science notes</summary>
+  <div class="ref-body">
+
+    <h3>Carbohydrate ladder</h3>
+    <table>
+      <thead><tr><th>Runner</th><th>Finish</th><th>Target g/h</th><th>Carb mix</th></tr></thead>
+      <tbody>
+        <tr><td>Beginner</td><td>&gt; 4:30</td><td>30</td><td>Sucrose alone</td></tr>
+        <tr><td>Recreational</td><td>3:45&ndash;4:30</td><td>45&ndash;60</td><td>Sucrose alone, or +small dextrose</td></tr>
+        <tr><td>Sub-elite</td><td>3:00&ndash;3:45</td><td>60&ndash;90</td><td>Multiple transportable carbs &mdash; sucrose + dextrose</td></tr>
+        <tr><td>Elite</td><td>&lt; 3:00</td><td>90&ndash;120</td><td>~1:0.8 to 1:1 glucose:fructose, concentrated flask + water</td></tr>
+      </tbody>
+    </table>
+    <p>Anchored to Burke et al. 2019 IAAF Consensus, Podlogar &amp; Wallis 2022, Hearris et al. 2022 (120 g/h peak exogenous oxidation 1.56&ndash;1.66 g/min), Viribay et al. 2020.</p>
+
+    <h3>Sodium targets</h3>
+    <table>
+      <thead><tr><th>Context</th><th>Sodium</th><th>Salt per L (drink as sole source)</th></tr></thead>
+      <tbody>
+        <tr><td>Cool, average sweater</td><td>300&ndash;500 mg/h</td><td>0.75&ndash;1.25 g/L</td></tr>
+        <tr><td>Mild, average sweater</td><td>500&ndash;700 mg/h</td><td>1.25&ndash;1.75 g/L</td></tr>
+        <tr><td>Hot or salty sweater</td><td>700&ndash;1000 mg/h</td><td>1.75&ndash;2.5 g/L</td></tr>
+      </tbody>
+    </table>
+    <p>1 g salt = 400 mg sodium. Palatability ceiling ~2.5 g salt/L; above that, take a salt capsule or salty food alongside.</p>
+
+    <h3>Pantry chemistry</h3>
+    <ul>
+      <li><strong>Sucrose</strong> (cane/beet sugar) &rarr; gut hydrolysis = 50&nbsp;% glucose + 50&nbsp;% fructose. Natural 1:1 ratio.</li>
+      <li><strong>Dextrose</strong> = pure glucose. Use to tilt ratio toward glucose at &gt;60 g/h.</li>
+      <li><strong>Fructose powder</strong> = needed only if chasing Maurten&rsquo;s 1:0.8 fructose:glucose at 100+ g/h.</li>
+      <li><strong>Salt</strong> co-transports glucose via SGLT1; also primary electrolyte.</li>
+      <li><strong>Citric acid / lemon juice</strong> = flavor and palatability.</li>
+    </ul>
+
+    <h3>Concentration zones</h3>
+    <ul>
+      <li><strong>&le; 8&nbsp;%</strong>: fast gastric emptying, isotonic, single-bottle strategy works.</li>
+      <li><strong>8&ndash;10&nbsp;%</strong>: still tolerable; gut-train before relying on it.</li>
+      <li><strong>10&ndash;14&nbsp;%</strong>: Maurten Drink Mix 320 territory (uses hydrogel). At home: drink plain water alongside.</li>
+      <li><strong>14&ndash;18&nbsp;%</strong>: concentrated flask strategy &mdash; sip + chase with aid-station water.</li>
+      <li><strong>&gt; 18&nbsp;%</strong>: not recommended; GI distress likely.</li>
+    </ul>
+
+    <h3>Gut-training ramp (4&ndash;10 weeks)</h3>
+    <ul>
+      <li>Wk 1&ndash;2: 30 g/h, 6&nbsp;% drink</li>
+      <li>Wk 3&ndash;4: 45&ndash;60 g/h, 6&ndash;8&nbsp;%</li>
+      <li>Wk 5&ndash;6: 60&ndash;75 g/h, 8&nbsp;%</li>
+      <li>Wk 7&ndash;8: 75&ndash;90 g/h, 8&ndash;10&nbsp;%</li>
+      <li>Wk 9+ (elite only): 90&ndash;120 g/h, 12&ndash;18&nbsp;% concentrated flask + water</li>
+    </ul>
+    <p>Train the gut at race intensity and race pace. Rehearse the exact recipe 4&ndash;6 times before race day. Never introduce new fuel in the last 2 weeks.</p>
+
+    <h3>Safety</h3>
+    <ul>
+      <li>Hyponatremia red flags: headache, confusion, swelling, weight <em>gain</em> mid-race &mdash; stop plain water, eat salt.</li>
+      <li>GI distress: stop concentrated carbs, switch to small sips of plain water, walk if needed.</li>
+      <li>Pre-race meal: low-fiber, low-fat, carb-dominant. No new foods.</li>
+      <li>Mix the drink fully &mdash; undissolved sugar at the bottom skews the last sips.</li>
+    </ul>
+
+  </div>
+</details>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- helpers ----------
+  function $(id) { return document.getElementById(id); }
+  function getRadio(name) {
+    const el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+  function fmt(n, digits) {
+    if (!isFinite(n)) return "—";
+    digits = digits == null ? 0 : digits;
+    return n.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  }
+  function round(n, step) { return Math.round(n / step) * step; }
+
+  // ---------- constants ----------
+  const LEVELS = {
+    beginner:     { carbs: 30,  range: [25, 35],   maxConc: 6,  recipe: "A" },
+    recreational: { carbs: 55,  range: [45, 60],   maxConc: 8,  recipe: "A-B" },
+    subelite:     { carbs: 75,  range: [60, 90],   maxConc: 10, recipe: "B" },
+    elite:        { carbs: 105, range: [90, 120],  maxConc: 18, recipe: "C" },
+  };
+
+  // ml/kg/h scaled by temperature
+  const FLUID_PER_KG = { cool: 6, mild: 8, hot: 10 };
+
+  // sodium mg/h by temperature × sweat-rate
+  const SODIUM = {
+    cool:  { normal: 350, salty: 500 },
+    mild:  { normal: 550, salty: 750 },
+    hot:   { normal: 800, salty: 1000 },
+  };
+
+  const CAFFEINE = { none: 0, low: 3, mid: 4.5, high: 6 };
+
+  // selected radio styling
+  function syncRadioStyles() {
+    document.querySelectorAll(".radios label").forEach(function (lbl) {
+      const input = lbl.querySelector("input");
+      if (input && input.checked) lbl.classList.add("selected");
+      else lbl.classList.remove("selected");
+    });
+  }
+
+  // ---------- recipe selection ----------
+  // Pick target drink-concentration (%) for a given hourly carb target.
+  function pickConcentration(carbsPerHour) {
+    if (carbsPerHour <= 45) return 6;
+    if (carbsPerHour <= 80) return 8;
+    if (carbsPerHour <= 100) return 14;
+    return 18;
+  }
+
+  // Decide sucrose/dextrose split given a carbs/h intensity.
+  // Returns dextrose share of total carbs (rest is sucrose).
+  function dextroseShare(carbsPerHour) {
+    if (carbsPerHour <= 50) return 0.0;           // sucrose alone
+    if (carbsPerHour <= 70) return 0.15;          // light tilt
+    if (carbsPerHour <= 90) return 0.25;          // Recipe B
+    return 0.33;                                  // Recipe C
+  }
+
+  // ---------- main compute ----------
+  function compute() {
+    const mass = Math.max(35, Math.min(150, parseFloat($("mass").value) || 70));
+    const hours = Math.max(0, parseFloat($("hours").value) || 0);
+    const minutes = Math.max(0, Math.min(59, parseFloat($("minutes").value) || 0));
+    const raceHours = hours + minutes / 60;
+
+    const level = getRadio("level") || "recreational";
+    const temp = getRadio("temp") || "mild";
+    const sweat = getRadio("sweat") || "normal";
+    const bottleMl = Math.max(100, Math.min(1500, parseFloat($("bottle").value) || 500));
+    const caffeineKey = $("caffeine").value;
+
+    const carbsPerHour = Math.max(15, Math.min(150, parseFloat($("carbs").value) || LEVELS[level].carbs));
+
+    // targets
+    const fluidPerHour = FLUID_PER_KG[temp] * mass;             // ml/h
+    const sodiumPerHour = SODIUM[temp][sweat];                  // mg/h
+    const totalCarbs = carbsPerHour * raceHours;                // g
+    const totalFluidTarget = fluidPerHour * raceHours;          // ml
+    const totalSodium = sodiumPerHour * raceHours;              // mg
+
+    // drink concentration
+    const concPct = pickConcentration(carbsPerHour);
+    const drinkMlTotal = totalCarbs / (concPct / 100);          // ml of homemade drink
+    const extraWaterMl = Math.max(0, totalFluidTarget - drinkMlTotal);
+
+    // bottle count
+    const bottleCount = Math.max(1, Math.ceil(drinkMlTotal / bottleMl));
+    const actualBottleMl = drinkMlTotal / bottleCount;          // per bottle
+
+    // ingredient split
+    const dShare = dextroseShare(carbsPerHour);
+    const dextroseTotal = totalCarbs * dShare;
+    const sucroseTotal = totalCarbs * (1 - dShare);
+
+    // sodium / salt per drink liter, with cap
+    const SALT_CAP_PER_L = 2.5;                                 // g salt
+    let saltPerL = (totalSodium / 400) / (drinkMlTotal / 1000); // g/L
+    let saltCapsuleMg = 0;
+    let saltCapped = false;
+    if (saltPerL > SALT_CAP_PER_L) {
+      saltCapped = true;
+      const drinkSaltTotal = SALT_CAP_PER_L * (drinkMlTotal / 1000);
+      const drinkSodiumTotal = drinkSaltTotal * 400;
+      saltCapsuleMg = Math.max(0, totalSodium - drinkSodiumTotal);
+      saltPerL = SALT_CAP_PER_L;
+    }
+    const saltTotalG = saltPerL * (drinkMlTotal / 1000);
+
+    // glucose:fructose breakdown
+    const glucoseTotal = sucroseTotal * 0.5 + dextroseTotal;
+    const fructoseTotal = sucroseTotal * 0.5;
+    const ratioG = glucoseTotal / Math.max(0.0001, fructoseTotal);
+
+    // caffeine
+    const caffeineMgPerKg = CAFFEINE[caffeineKey];
+    const caffeineTotal = caffeineMgPerKg * mass;
+
+    return {
+      mass, raceHours, level, temp, sweat, bottleMl, caffeineKey,
+      carbsPerHour, fluidPerHour, sodiumPerHour,
+      totalCarbs, totalFluidTarget, totalSodium,
+      concPct, drinkMlTotal, extraWaterMl,
+      bottleCount, actualBottleMl,
+      sucroseTotal, dextroseTotal, dShare,
+      saltPerL, saltTotalG, saltCapsuleMg, saltCapped,
+      glucoseTotal, fructoseTotal, ratioG,
+      caffeineTotal,
+    };
+  }
+
+  // ---------- render ----------
+  function render() {
+    syncRadioStyles();
+    const r = compute();
+
+    // top stats
+    $("o-carbs").textContent = fmt(r.carbsPerHour) + " g/h";
+    $("o-carbs-total").textContent = fmt(r.totalCarbs) + " g total over " + fmt(r.raceHours, 2) + " h";
+
+    $("o-fluid").textContent = fmt(round(r.fluidPerHour, 25)) + " ml/h";
+    $("o-fluid-total").textContent = fmt(round(r.totalFluidTarget, 50)) + " ml total" +
+      (r.extraWaterMl > 25 ? " (incl. " + fmt(round(r.extraWaterMl, 50)) + " ml plain water)" : "");
+
+    $("o-sodium").textContent = fmt(r.sodiumPerHour) + " mg/h";
+    $("o-sodium-total").textContent = fmt(round(r.totalSodium, 50)) + " mg total" +
+      (r.saltCapsuleMg > 0 ? " (+" + fmt(round(r.saltCapsuleMg, 50)) + " mg via capsule)" : "");
+
+    $("o-conc").textContent = r.concPct + " %";
+    let concSub = "";
+    if (r.concPct <= 8) concSub = "Isotonic-ish, fast emptying";
+    else if (r.concPct <= 10) concSub = "Just above isotonic — train your gut";
+    else if (r.concPct <= 14) concSub = "Concentrated — chase with plain water";
+    else concSub = "Highly concentrated flask — sip + chase";
+    $("o-conc-sub").textContent = concSub;
+
+    const ratioStr = r.fructoseTotal > 0
+      ? (r.ratioG.toFixed(2) + " : 1")
+      : "all glucose";
+    $("o-ratio").textContent = ratioStr;
+    let ratioSub;
+    if (r.fructoseTotal === 0) ratioSub = "—";
+    else if (r.ratioG <= 1.2) ratioSub = "Maurten-like (1:0.8 to 1:1)";
+    else if (r.ratioG <= 1.7) ratioSub = "Classic 1.5:1, fructose-friendly";
+    else ratioSub = "Glucose-heavy — fine below 60 g/h";
+    $("o-ratio-sub").textContent = ratioSub;
+
+    $("o-bottles").textContent = r.bottleCount + " × " + fmt(round(r.actualBottleMl, 25)) + " ml";
+    const minsPerBottle = (r.raceHours * 60) / r.bottleCount;
+    $("o-bottles-sub").textContent = "One bottle every ~" + fmt(round(minsPerBottle, 5)) + " min";
+
+    // recipe header
+    let recipeName, strategy;
+    if (r.concPct <= 6) {
+      recipeName = "Recipe A — Recreational 6 % isotonic";
+      strategy = "Drink the homemade mix throughout. Fast gastric emptying. Sucrose-only is fine at this rate.";
+    } else if (r.concPct <= 10) {
+      recipeName = "Recipe B — Intermediate " + r.concPct + " % balanced";
+      strategy = "Top of the fast-emptying zone. Sucrose + a touch of dextrose pushes the glucose side past SGLT1 saturation.";
+    } else if (r.concPct <= 14) {
+      recipeName = "Recipe B/C hybrid — " + r.concPct + " % + water chase";
+      strategy = "Maurten Drink Mix territory. Sip the bottle, chase 100–150 ml plain water from aid stations every ~20 min.";
+    } else {
+      recipeName = "Recipe C — Concentrated 18 % flask";
+      strategy = "Carry concentrated flask(s); sip ~25–30 % of a flask every 20–25 min and chase with ~100–150 ml plain water from aid stations. Requires gut training.";
+    }
+    $("r-name").textContent = recipeName;
+    $("r-strategy").textContent = strategy;
+
+    // ingredient table — per bottle, per liter, total
+    const perBottle = function (totalGrams) { return totalGrams / r.bottleCount; };
+    const perLiter = function (totalGrams) { return totalGrams / (r.drinkMlTotal / 1000); };
+
+    const rows = [];
+    rows.push({
+      name: "Water",
+      perBottle: fmt(round(r.actualBottleMl, 25)) + " ml",
+      perLiter: "1000 ml",
+      total: fmt(round(r.drinkMlTotal, 50)) + " ml",
+    });
+    rows.push({
+      name: "Sucrose (cane/beet sugar)",
+      perBottle: fmt(perBottle(r.sucroseTotal), 1) + " g",
+      perLiter: fmt(perLiter(r.sucroseTotal), 1) + " g",
+      total: fmt(r.sucroseTotal, 0) + " g",
+    });
+    if (r.dextroseTotal > 0.5) {
+      rows.push({
+        name: "Dextrose (pure glucose powder)",
+        perBottle: fmt(perBottle(r.dextroseTotal), 1) + " g",
+        perLiter: fmt(perLiter(r.dextroseTotal), 1) + " g",
+        total: fmt(r.dextroseTotal, 0) + " g",
+      });
+    }
+    rows.push({
+      name: "Salt (table or sea salt)",
+      perBottle: fmt(perBottle(r.saltTotalG), 2) + " g",
+      perLiter: fmt(r.saltPerL, 2) + " g",
+      total: fmt(r.saltTotalG, 1) + " g",
+    });
+    rows.push({
+      name: "Citric acid or lemon juice",
+      perBottle: "pinch / ~5 ml",
+      perLiter: "~1 g / 15 ml",
+      total: "to taste",
+    });
+    if (r.caffeineTotal > 0) {
+      // place ~half across the bottles for the in-race share (assume half pre-race, half in-race)
+      const inRaceCaff = r.caffeineTotal * 0.5;
+      rows.push({
+        name: "Caffeine in-bottle (optional)",
+        perBottle: fmt(inRaceCaff / r.bottleCount, 0) + " mg",
+        perLiter: "—",
+        total: fmt(inRaceCaff, 0) + " mg (other half pre-race)",
+      });
+    }
+    if (r.extraWaterMl > 25) {
+      rows.push({
+        name: "Plain water from aid stations",
+        perBottle: "—",
+        perLiter: "—",
+        total: fmt(round(r.extraWaterMl, 50)) + " ml",
+      });
+    }
+
+    const tbody = $("r-ing");
+    tbody.innerHTML = rows.map(function (row) {
+      return "<tr><td>" + row.name + "</td>" +
+             "<td class=\"num\">" + row.perBottle + "</td>" +
+             "<td class=\"num\">" + row.perLiter + "</td>" +
+             "<td class=\"num\">" + row.total + "</td></tr>";
+    }).join("");
+
+    // notes
+    const notes = [];
+    const levelDef = LEVELS[r.level];
+    if (r.carbsPerHour < levelDef.range[0] || r.carbsPerHour > levelDef.range[1]) {
+      notes.push({
+        cls: "warn",
+        text: "Your hourly carb target (" + r.carbsPerHour + " g/h) is outside the typical " +
+              levelDef.range[0] + "–" + levelDef.range[1] + " g/h band for " + r.level +
+              " runners. Make sure you've gut-trained to this rate."
+      });
+    }
+    if (r.carbsPerHour >= 90) {
+      notes.push({
+        cls: "warn",
+        text: "At ≥ 90 g/h you need multiple transportable carbs and a 4–10 week gut-training ramp. Rehearse the exact recipe at race pace at least 4–6 times before the marathon."
+      });
+    }
+    if (r.concPct > 10) {
+      notes.push({
+        cls: "warn",
+        text: "Concentration is " + r.concPct + " % — drink plain water alongside (from aid stations) to prevent slow gastric emptying. Maurten's hydrogel masks this; a homemade drink does not."
+      });
+    }
+    if (r.saltCapped) {
+      notes.push({
+        cls: "warn",
+        text: "Your sodium target would require > 2.5 g salt/L (unpalatable). Capped at 2.5 g/L; carry a salt capsule providing ~" +
+              fmt(round(r.saltCapsuleMg, 50)) + " mg sodium for the rest."
+      });
+    }
+    if (r.extraWaterMl > 25) {
+      notes.push({
+        cls: "ok",
+        text: "Plan to drink ~" + fmt(round(r.extraWaterMl, 50)) + " ml of plain water from aid stations over the race (≈" +
+              fmt(round(r.extraWaterMl / r.raceHours, 25)) + " ml/h) to meet fluid needs."
+      });
+    }
+    if (r.caffeineTotal > 0) {
+      notes.push({
+        cls: "ok",
+        text: "Caffeine total " + fmt(r.caffeineTotal) + " mg (" + CAFFEINE[r.caffeineKey] +
+              " mg/kg). Suggested split: ~" + fmt(r.caffeineTotal * 0.5) +
+              " mg ~45 min pre-start, ~" + fmt(r.caffeineTotal * 0.5) + " mg spread across bottles from ~1:30 into the race."
+      });
+    }
+    notes.push({
+      cls: "ok",
+      text: "Glucose " + fmt(r.glucoseTotal) + " g + fructose " + fmt(r.fructoseTotal) +
+            " g across the race (ratio " + ratioStr + ")."
+    });
+    notes.push({
+      cls: "danger",
+      text: "Never race a new fueling strategy. Practice this exact recipe + concentration at goal pace before the marathon."
+    });
+
+    $("r-notes").innerHTML = notes.map(function (n) {
+      return "<div class=\"note " + n.cls + "\">" + n.text + "</div>";
+    }).join("");
+  }
+
+  // ---------- wiring ----------
+  // when level changes, push a sensible default into the carbs input
+  document.querySelectorAll('input[name="level"]').forEach(function (el) {
+    el.addEventListener("change", function () {
+      const key = el.value;
+      $("carbs").value = LEVELS[key].carbs;
+      render();
+    });
+  });
+
+  ["mass", "hours", "minutes", "carbs", "bottle", "caffeine"].forEach(function (id) {
+    $(id).addEventListener("input", render);
+    $(id).addEventListener("change", render);
+  });
+
+  ["temp", "sweat"].forEach(function (name) {
+    document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) {
+      el.addEventListener("change", render);
+    });
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
