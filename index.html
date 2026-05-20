@@ -411,6 +411,11 @@
         <div class="v" id="o-bottles">&mdash;</div>
         <div class="sub" id="o-bottles-sub"></div>
       </div>
+      <div class="stat" id="stat-caff">
+        <div class="k">Caffeine</div>
+        <div class="v" id="o-caff">&mdash;</div>
+        <div class="sub" id="o-caff-sub"></div>
+      </div>
     </div>
 
     <div class="recipe">
@@ -716,6 +721,16 @@
     const minsPerBottle = (r.raceHours * 60) / r.bottleCount;
     $("o-bottles-sub").textContent = "One bottle every ~" + fmt(round(minsPerBottle, 5)) + " min";
 
+    // Caffeine stat
+    if (r.caffeineTotal > 0) {
+      $("o-caff").textContent = fmt(r.caffeineTotal) + " mg";
+      $("o-caff-sub").textContent = CAFFEINE[r.caffeineKey] + " mg/kg · " +
+        fmt(r.caffeineTotal * 0.5) + " mg pre + " + fmt(r.caffeineTotal * 0.5) + " mg in-race";
+    } else {
+      $("o-caff").textContent = "None";
+      $("o-caff-sub").textContent = "No caffeine planned";
+    }
+
     // recipe header
     let recipeName, strategy;
     if (r.concPct <= 6) {
@@ -882,10 +897,19 @@
     });
   });
 
-  ["mass", "hours", "minutes", "carbs", "bottle", "caffeine"].forEach(function (id) {
-    $(id).addEventListener("input", render);
-    $(id).addEventListener("change", render);
+  ["mass", "hours", "minutes", "carbs", "bottle"].forEach(function (id) {
+    const el = $(id);
+    if (!el) return;
+    el.addEventListener("input", render);
+    el.addEventListener("change", render);
   });
+  // Caffeine is a <select>; wire it explicitly to be safe across browsers
+  (function () {
+    const caff = $("caffeine");
+    if (!caff) return;
+    caff.addEventListener("change", render);
+    caff.addEventListener("input", render);
+  })();
 
   ["temp", "sweat"].forEach(function (name) {
     document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) {
