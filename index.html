@@ -3,1196 +3,1750 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ff5e3a">
-<title>Marathon Fuel — Mix your race-day drink</title>
+<meta name="theme-color" content="#0a0a08">
+<title>MF/01 — Marathon Fuel · Engineered in a Kitchen</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-1: #fff7ee;
-    --bg-2: #ffe9ee;
-    --bg-3: #f1eaff;
-    --card: #ffffff;
-    --ink: #16122a;
-    --ink-2: #2a2440;
-    --muted: #6b6580;
-    --line: #ece6e0;
-    --line-2: #f3eee8;
-    --accent: #ff5e3a;
-    --accent-2: #ff2d78;
-    --accent-3: #7a3bff;
-    --accent-soft: #fff0e9;
-    --lime: #aef359;
-    --ok: #0f8a5a;
-    --ok-soft: #defaf0;
-    --warn: #b35a00;
-    --warn-soft: #fff3d6;
-    --danger: #b8261c;
-    --danger-soft: #ffe2dd;
-    --shadow-sm: 0 1px 2px rgba(22,18,42,.05), 0 2px 8px rgba(22,18,42,.04);
-    --shadow-md: 0 6px 24px rgba(22,18,42,.07), 0 2px 6px rgba(22,18,42,.05);
-    --shadow-lg: 0 24px 60px rgba(255,94,58,.18), 0 6px 16px rgba(22,18,42,.06);
-    --grad: linear-gradient(135deg, #ff5e3a 0%, #ff2d78 55%, #7a3bff 100%);
-    --grad-soft: linear-gradient(135deg, #fff7ee 0%, #ffe9ee 50%, #f1eaff 100%);
-    --radius: 14px;
-    --radius-lg: 22px;
+    --bg:        #f4f4f0;
+    --bg-2:      #ececea;
+    --ink:       #0a0a08;
+    --ink-2:     #1c1c1a;
+    --muted:     #6f6f6a;
+    --line:      #d8d8d4;
+    --hairline:  #1c1c1a;
+    --hi:        #dcff1c;            /* hazard yellow */
+    --hi-deep:   #b8d917;
+    --red:       #d3210a;            /* alert red */
+    --green:     #00754a;
+    --max-w: 1480px;
+    --gutter: 32px;
   }
+  @media (max-width: 720px) { :root { --gutter: 20px; } }
 
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; max-width: 100%; overflow-x: hidden; }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background:
-      radial-gradient(900px 600px at 10% -10%, #ffe2d4 0%, transparent 60%),
-      radial-gradient(800px 600px at 110% 10%, #ffd6e6 0%, transparent 55%),
-      radial-gradient(900px 700px at 50% 110%, #e6d8ff 0%, transparent 55%),
-      var(--bg-1);
-    background-attachment: fixed;
+    background: var(--bg);
     color: var(--ink);
-    line-height: 1.55;
+    font-family: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
-  .display { font-family: "Fraunces", "Iowan Old Style", Georgia, serif; font-weight: 800; letter-spacing: -0.02em; }
-  .tab-nums { font-variant-numeric: tabular-nums; }
+  ::selection { background: var(--hi); color: var(--ink); }
 
-  /* ---------- top bar ---------- */
-  .topbar {
-    max-width: 1180px;
+  /* ----- type utilities ----- */
+  .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; }
+  .upper { text-transform: uppercase; letter-spacing: 0.04em; }
+  .tab-nums { font-variant-numeric: tabular-nums lining-nums; }
+  .label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .label-muted { color: var(--muted); }
+
+  .container {
+    max-width: var(--max-w);
     margin: 0 auto;
-    padding: 18px 24px 0;
-    display: flex;
+    padding: 0 var(--gutter);
+  }
+
+  hr.rule { border: 0; border-top: 1px solid var(--hairline); margin: 0; }
+  hr.line { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+  /* ========== TOP NAV ========== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .topbar .inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 24px;
+    height: 64px;
   }
   .brand {
     display: inline-flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
-    font-weight: 700;
-    font-size: 0.95rem;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: 1.05rem;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: var(--ink-2);
-  }
-  .brand .dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: var(--grad);
-    box-shadow: 0 6px 18px rgba(255,94,58,.4);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1rem;
-  }
-  .nav-pills { display: flex; gap: 6px; }
-  .nav-pills a {
+    color: var(--ink);
     text-decoration: none;
-    color: var(--muted);
-    font-size: 0.85rem;
-    padding: 6px 10px;
-    border-radius: 999px;
-    transition: background .15s, color .15s;
   }
-  .nav-pills a:hover { background: #fff; color: var(--ink); }
-  @media (max-width: 640px) { .nav-pills { display: none; } }
+  .brand .slash { color: var(--hi-deep); font-weight: 800; }
+  .brand .sub { font-family: "JetBrains Mono", monospace; font-size: 0.68rem; letter-spacing: 0.18em; color: var(--muted); font-weight: 500; }
 
-  /* ---------- hero ---------- */
-  header.hero {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 28px 24px 8px;
-    text-align: center;
-  }
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--ink-2);
-    box-shadow: var(--shadow-sm);
-    margin-bottom: 18px;
-  }
-  .eyebrow .blip {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px rgba(255,94,58,.18);
-  }
-  h1.title {
-    margin: 0 0 12px;
-    font-size: clamp(2.2rem, 6vw, 3.6rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-  }
-  h1.title .grad {
-    background: var(--grad);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .sub {
-    max-width: 640px;
-    margin: 0 auto 14px;
-    color: var(--ink-2);
-    font-size: clamp(1rem, 2.2vw, 1.15rem);
-  }
-  .micro {
-    max-width: 720px;
-    margin: 0 auto 20px;
-    color: var(--muted);
-    font-size: 0.92rem;
-  }
-  .badges {
+  nav.primary {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    gap: 0;
     justify-content: center;
-    margin-bottom: 22px;
   }
-  .badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: #fff;
-    border: 1px solid var(--line);
+  nav.primary a {
+    font-family: "Hanken Grotesk", sans-serif;
     font-size: 0.82rem;
-    color: var(--ink-2);
-    font-weight: 500;
-  }
-  .badge-pill .ico { font-size: 1rem; }
-
-  /* ---------- main grid ---------- */
-  main {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 8px 24px 32px;
-    display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.3fr);
-    gap: 22px;
-  }
-  main > * { min-width: 0; }
-  @media (max-width: 940px) {
-    main { grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 8px 14px 24px; }
-    header.hero { padding: 18px 14px 4px; }
-    .topbar { padding: 14px 14px 0; }
-  }
-
-  /* ---------- cards ---------- */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    padding: 22px;
-    box-shadow: var(--shadow-md);
-  }
-  @media (max-width: 480px) {
-    .card { padding: 16px; border-radius: 18px; }
-  }
-  .card-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 18px;
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--ink-2);
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .card-title .ico-square {
-    width: 30px; height: 30px;
-    border-radius: 9px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 0.95rem;
-  }
-
-  /* ---------- fields ---------- */
-  .field { margin-bottom: 18px; }
-  .field:last-child { margin-bottom: 0; }
-  fieldset.field { border: 0; padding: 0; margin: 0 0 18px; min-width: 0; }
-  fieldset.field:last-child { margin-bottom: 0; }
-  legend.lbl { padding: 0; width: 100%; }
-  .field .lbl {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 8px;
-    font-size: 0.9rem;
     font-weight: 600;
     color: var(--ink);
+    text-decoration: none;
+    padding: 8px 18px;
+    border-bottom: 2px solid transparent;
+    transition: border-color .12s;
+  }
+  nav.primary a:hover, nav.primary a:focus-visible { border-bottom-color: var(--ink); outline: none; }
+  @media (max-width: 880px) { nav.primary { display: none; } }
+
+  .top-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .top-right .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--hi-deep);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  @media (max-width: 540px) { .top-right { font-size: 0.62rem; gap: 8px; } }
+
+  /* ========== HERO ========== */
+  .hero {
+    border-bottom: 1px solid var(--hairline);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero .inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 56px;
+    align-items: stretch;
+    padding: 80px 0 64px;
+  }
+  @media (max-width: 980px) {
+    .hero .inner { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 40px; }
+  }
+  .hero .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 36px;
+  }
+  .hero .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .hero .eyebrow .tag {
+    background: var(--ink);
+    color: var(--hi);
+    padding: 3px 9px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+  }
+  .hero h1 {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(3rem, 8.5vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin: 22px 0 0;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+  .hero h1 .hi {
+    background: var(--hi);
+    padding: 0 0.08em;
+    margin: 0 -0.04em;
+    display: inline-block;
+    line-height: 0.95;
+  }
+  .hero .deck {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.45;
+    color: var(--ink-2);
+    max-width: 52ch;
+    margin-top: 18px;
+    font-weight: 400;
+  }
+  .hero .hero-bottom {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 32px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    transition: background .15s, color .15s;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--hi); color: var(--ink); }
+  .btn .arrow { display: inline-block; transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(4px); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+
+  /* hero spec card (right side) — looks like a product spec block */
+  .spec-card {
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 380px;
+  }
+  .spec-card .head {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--ink);
+    color: var(--bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .spec-card .head .t {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--hi);
+    font-weight: 500;
+  }
+  .spec-card .head .ref {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--bg);
+    opacity: 0.7;
+  }
+  .spec-card .figure {
+    padding: 32px 22px 16px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+  .spec-card .figure .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
     margin-bottom: 8px;
   }
-  .field .lbl .ico { margin-right: 6px; }
-  .field .hint {
-    display: block;
+  .spec-card .figure .v {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(4rem, 10vw, 6rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums lining-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .spec-card .figure .v .unit {
+    font-size: 0.34em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--muted);
-    font-size: 0.8rem;
+    background: var(--hi);
+    color: var(--ink);
+    padding: 2px 8px;
+  }
+  .spec-card .figure .sub {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
     margin-top: 6px;
   }
-  .field .v-chip {
-    font-variant-numeric: tabular-nums;
+  .spec-card .geom {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .spec-card .geom .cell {
+    padding: 14px 22px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .spec-card .geom .cell:nth-child(2n) { border-right: 0; }
+  .spec-card .geom .cell:nth-last-child(-n+2) { border-bottom: 0; }
+  .spec-card .geom .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .spec-card .geom .v {
+    font-family: "Hanken Grotesk", sans-serif;
     font-weight: 700;
-    color: var(--accent);
-    background: var(--accent-soft);
+    font-size: 1.05rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+
+  /* ========== TICKER STRIP ========== */
+  .ticker {
+    background: var(--ink);
+    color: var(--bg);
+    overflow: hidden;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .ticker .inner {
+    display: flex;
+    gap: 48px;
+    padding: 14px 0;
+    white-space: nowrap;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    animation: ticker 38s linear infinite;
+  }
+  .ticker .inner > span { display: inline-flex; align-items: center; gap: 12px; }
+  .ticker .star { color: var(--hi); }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ========== SECTION HEADER ========== */
+  .section-head {
+    padding: 80px 0 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: 32px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .section-head .idx {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: var(--hi-deep);
+    font-weight: 600;
+    align-self: end;
+    padding-bottom: 6px;
+  }
+  .section-head h2 {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .section-head .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    align-self: end;
+    padding-bottom: 6px;
+  }
+  @media (max-width: 720px) {
+    .section-head { grid-template-columns: 1fr; padding: 48px 0 24px; gap: 8px; }
+    .section-head .meta { text-align: left; }
+  }
+
+  /* ========== CALCULATOR ========== */
+  .calc {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .calc > .panel { padding: 36px 0; }
+  .calc > .panel + .panel { border-left: 1px solid var(--hairline); padding-left: 36px; }
+  .calc > .panel:first-child { padding-right: 36px; }
+  @media (max-width: 980px) {
+    .calc { grid-template-columns: 1fr; }
+    .calc > .panel + .panel { border-left: 0; border-top: 1px solid var(--hairline); padding-left: 0; padding-top: 28px; }
+    .calc > .panel:first-child { padding-right: 0; }
+  }
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .panel-head h3 {
+    margin: 0;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+  }
+  .panel-head .ref { color: var(--muted); }
+
+  /* form fields */
+  .field { margin: 0 0 22px; }
+  .field:last-child { margin-bottom: 0; }
+  fieldset.field { border: 0; padding: 0; margin: 0 0 22px; min-width: 0; }
+  legend.lbl, label.lbl {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    width: 100%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 8px;
+    padding: 0;
+    font-weight: 500;
+  }
+  .lbl .v-chip {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    background: var(--hi);
     padding: 2px 8px;
-    border-radius: 999px;
-    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .field .hint {
+    display: block;
+    margin-top: 6px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
   }
   input[type="number"], select {
     font: inherit;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid var(--line);
-    border-radius: 12px;
-    background: #fff;
+    border: 1px solid var(--hairline);
+    border-radius: 0;
+    background: var(--bg);
     color: var(--ink);
-    transition: border-color .15s, box-shadow .15s;
-    font-weight: 500;
+    font-variant-numeric: tabular-nums lining-nums;
+    transition: border-color .12s, background .12s;
+    -webkit-appearance: none; appearance: none;
   }
-  input[type="number"]:hover, select:hover { border-color: #d8d2cc; }
+  select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M3 5 L7 9 L11 5' fill='none' stroke='%230a0a08' stroke-width='1.6'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+  input[type="number"]:hover, select:hover { background: var(--bg-2); }
   input[type="number"]:focus, select:focus {
     outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(255,94,58,.15);
+    border-color: var(--ink);
+    box-shadow: inset 0 -3px 0 0 var(--hi);
   }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
-  /* ---------- chip radios ---------- */
-  .chips {
-    display: grid;
-    gap: 8px;
+  /* ---------- range slider (BMC-style) ---------- */
+  .slider-wrap {
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+    padding: 18px 20px 14px;
   }
-  .chips.cols-2 { grid-template-columns: 1fr 1fr; }
-  .chips.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .chips label {
-    position: relative;
-    display: block;
-    padding: 12px 14px;
-    border: 1.5px solid var(--line);
-    border-radius: 14px;
-    cursor: pointer;
-    background: #fff;
-    font-size: 0.88rem;
-    line-height: 1.35;
-    transition: all .15s ease;
-  }
-  .chips label:hover {
-    border-color: #d8d2cc;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
-  }
-  .chips label:focus-within {
-    outline: 3px solid rgba(255,94,58,.45);
-    outline-offset: 2px;
-    border-color: var(--accent);
-  }
-  .chips input { position: absolute; opacity: 0; pointer-events: none; }
-  .chips label .top {
+  .slider-display {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 2px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 0 14px;
+  }
+  .slider-display .num {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .slider-display .num .unit {
+    font-size: 0.34em;
     font-weight: 700;
-    color: var(--ink);
-  }
-  .chips label .top .ico { font-size: 1.05rem; }
-  .chips label .meta { display: block; color: var(--muted); font-size: 0.78rem; }
-  .chips label.selected {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(255,94,58,.07), rgba(255,45,120,.07));
-    box-shadow: 0 6px 18px rgba(255,94,58,.15);
-  }
-  .chips label.selected .top { color: var(--accent); }
-  .chips label.selected::after {
-    content: "✓";
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--grad);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 3px 8px rgba(255,94,58,.4);
-  }
-
-  /* ---------- stat tiles ---------- */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  @media (max-width: 520px) {
-    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  .stat {
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px 14px 12px;
-    background: linear-gradient(180deg, #fff 0%, #fffaf6 100%);
-    min-width: 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .stat .k {
-    font-size: 0.7rem;
-    color: var(--muted);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .stat .v {
-    font-family: "Fraunces", Georgia, serif;
-    font-weight: 800;
-    font-size: clamp(1.3rem, 3.4vw, 1.7rem);
     color: var(--ink);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    word-break: break-word;
+    background: var(--hi);
+    padding: 2px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .slider-display .range {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+  }
+  input[type="range"].slider {
+    -webkit-appearance: none;
+            appearance: none;
+    width: 100%;
+    background: transparent;
+    margin: 6px 0 0;
+    padding: 0;
+    border: 0;
+    height: 28px;
+    cursor: pointer;
+    display: block;
+  }
+  input[type="range"].slider:focus { outline: none; }
+  /* track */
+  input[type="range"].slider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--hairline);
+    border: 0;
+  }
+  input[type="range"].slider::-moz-range-track {
+    height: 2px;
+    background: var(--hairline);
+    border: 0;
+  }
+  input[type="range"].slider::-moz-range-progress {
+    background: var(--ink);
+    height: 2px;
+  }
+  /* thumb */
+  input[type="range"].slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+            appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--ink);
+    border: 0;
+    border-radius: 0;
+    margin-top: -10px;
+    cursor: grab;
+    box-shadow: 0 0 0 0 var(--hi);
+    transition: box-shadow .15s, background .15s;
+  }
+  input[type="range"].slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--ink);
+    border: 0;
+    border-radius: 0;
+    cursor: grab;
+    box-shadow: 0 0 0 0 var(--hi);
+    transition: box-shadow .15s, background .15s;
+  }
+  input[type="range"].slider:hover::-webkit-slider-thumb,
+  input[type="range"].slider:focus::-webkit-slider-thumb {
+    background: var(--hi);
+    box-shadow: 0 0 0 4px var(--ink);
+  }
+  input[type="range"].slider:hover::-moz-range-thumb,
+  input[type="range"].slider:focus::-moz-range-thumb {
+    background: var(--hi);
+    box-shadow: 0 0 0 4px var(--ink);
+  }
+  input[type="range"].slider:active::-webkit-slider-thumb,
+  input[type="range"].slider:active::-moz-range-thumb {
+    cursor: grabbing;
+  }
+  .ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
     font-variant-numeric: tabular-nums;
   }
-  .stat .sub {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-top: 4px;
-    word-break: break-word;
-  }
-  .stat.hero {
-    grid-column: span 3;
-    background: var(--grad);
-    border: none;
-    color: #fff;
-    padding: 18px 20px;
-    box-shadow: var(--shadow-lg);
-  }
-  @media (max-width: 520px) {
-    .stat.hero { grid-column: span 2; }
-  }
-  .stat.hero .k { color: rgba(255,255,255,.85); }
-  .stat.hero .v {
-    color: #fff;
-    font-size: clamp(2rem, 6vw, 2.8rem);
-  }
-  .stat.hero .sub { color: rgba(255,255,255,.9); font-size: 0.85rem; }
-  .stat.hero::after {
+  .ticks span { position: relative; padding-top: 6px; }
+  .ticks span::before {
     content: "";
     position: absolute;
-    right: -20px; top: -20px;
-    width: 140px; height: 140px;
-    background: radial-gradient(circle, rgba(255,255,255,.25) 0%, transparent 60%);
-    border-radius: 50%;
+    top: 0; left: 50%;
+    width: 1px; height: 4px;
+    background: var(--hairline);
+    transform: translateX(-50%);
   }
+  .ticks span:first-child::before { left: 0; transform: none; }
+  .ticks span:last-child::before { left: auto; right: 0; transform: none; }
 
-  /* ---------- recipe ---------- */
-  .recipe {
-    border-top: 1px dashed var(--line);
-    padding-top: 18px;
-    margin-top: 8px;
-  }
-  .recipe-head {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-  .recipe-head .badge-shaker {
-    width: 44px; height: 44px;
-    border-radius: 14px;
-    background: var(--grad);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem;
-    box-shadow: 0 8px 20px rgba(255,94,58,.35);
-    flex-shrink: 0;
-  }
-  .recipe-head h3 {
-    margin: 0 0 4px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-  .recipe-head .strategy {
-    color: var(--muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  table.ing {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 0.92rem;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  table.ing th, table.ing td {
-    padding: 11px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--line-2);
-    word-break: break-word;
-    overflow-wrap: break-word;
-  }
-  table.ing tr:last-child td { border-bottom: none; }
-  table.ing th {
-    font-weight: 700;
-    color: var(--muted);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    background: #fbf8f4;
-  }
-  table.ing td.num, table.ing th.num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  table.ing tbody tr:first-child td { font-weight: 600; }
-  @media (max-width: 480px) {
-    table.ing { font-size: 0.84rem; }
-    table.ing th, table.ing td { padding: 9px 8px; }
-    table.ing th { font-size: 0.66rem; letter-spacing: 0.04em; }
-  }
-
-  /* ---------- notes ---------- */
-  .notes { margin-top: 14px; display: grid; gap: 8px; }
-  .note {
-    border-radius: 12px;
-    padding: 11px 14px 11px 38px;
-    font-size: 0.88rem;
-    border: 1px solid;
+  /* chips (radio segmented) */
+  .chips { display: grid; gap: -1px; background: var(--hairline); border: 1px solid var(--hairline); }
+  .chips.cols-2 { grid-template-columns: 1fr 1fr; gap: 1px; }
+  .chips.cols-3 { grid-template-columns: repeat(3, 1fr); gap: 1px; }
+  .chips:not(.cols-2):not(.cols-3) { gap: 1px; }
+  .chips label {
     position: relative;
-    line-height: 1.5;
-  }
-  .note::before {
-    position: absolute;
-    left: 12px; top: 10px;
-    font-size: 1.05rem;
-  }
-  .note.ok    { background: var(--ok-soft);     border-color: #b8eed6; color: #08593a; }
-  .note.warn  { background: var(--warn-soft);   border-color: #fadf94; color: #6b3500; }
-  .note.danger{ background: var(--danger-soft); border-color: #ffb8ad; color: #7b1810; }
-  .note.ok::before     { content: "✓"; color: var(--ok); }
-  .note.warn::before   { content: "⚠"; color: var(--warn); }
-  .note.danger::before { content: "✕"; color: var(--danger); }
-  .note strong { font-weight: 700; }
-
-  /* ---------- extras: collapsible cards ---------- */
-  .extras-wrap {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: grid;
-    gap: 14px;
-  }
-  @media (max-width: 940px) {
-    .extras-wrap { padding: 0 14px; }
-  }
-  details.extra {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-  }
-  details.extra summary {
+    background: var(--bg);
+    padding: 14px 16px 14px 38px;
     cursor: pointer;
-    padding: 18px 22px;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    user-select: none;
-  }
-  details.extra summary::-webkit-details-marker { display: none; }
-  details.extra .sum-ico {
-    width: 38px; height: 38px;
-    border-radius: 12px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.15rem;
-    flex-shrink: 0;
-  }
-  details.extra .sum-text { flex: 1; min-width: 0; }
-  details.extra .sum-text .t {
-    font-weight: 700;
-    font-size: 1.02rem;
-    color: var(--ink);
-    letter-spacing: -0.005em;
+    transition: background .12s;
     display: block;
   }
-  details.extra .sum-text .d {
-    color: var(--muted);
-    font-size: 0.86rem;
+  .chips label:hover { background: var(--bg-2); }
+  .chips label:focus-within { background: var(--hi); outline: none; }
+  .chips input { position: absolute; opacity: 0; pointer-events: none; }
+  .chips label .ballot {
+    position: absolute;
+    left: 14px; top: 17px;
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--ink);
+    background: var(--bg);
+  }
+  .chips label.selected { background: var(--ink); color: var(--bg); }
+  .chips label.selected .ballot { background: var(--hi); border-color: var(--hi); }
+  .chips label .top {
+    display: block;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .chips label .meta {
     display: block;
     margin-top: 2px;
-  }
-  details.extra .chev {
-    color: var(--muted);
-    font-size: 1.1rem;
-    transition: transform .2s;
-    flex-shrink: 0;
-  }
-  details.extra[open] .chev { transform: rotate(180deg); }
-  details.extra .body {
-    padding: 4px 22px 22px;
-    border-top: 1px dashed var(--line);
-    margin-top: 4px;
-    padding-top: 18px;
-  }
-  details.extra .body p {
-    color: var(--ink-2);
-    font-size: 0.92rem;
-    line-height: 1.6;
-    margin: 0 0 12px;
-  }
-  details.extra .body p.muted { color: var(--muted); font-size: 0.88rem; }
-  details.extra .body h3 {
-    margin: 18px 0 8px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.005em;
-  }
-  details.extra .body h3:first-child { margin-top: 0; }
-  details.extra .body ul, details.extra .body ol {
-    margin: 6px 0 12px;
-    padding-left: 22px;
-    color: var(--ink-2);
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
-  details.extra .body ul li, details.extra .body ol li { margin-bottom: 4px; }
-  details.extra .body table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    font-size: 0.86rem;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 8px 0 14px;
-  }
-  details.extra .body th, details.extra .body td {
-    text-align: left;
-    padding: 8px 10px;
-    border-bottom: 1px solid var(--line-2);
-  }
-  details.extra .body tr:last-child td { border-bottom: none; }
-  details.extra .body th {
-    background: #fbf8f4;
-    font-weight: 700;
-    font-size: 0.72rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: var(--muted);
   }
-  details.extra .body td.num, details.extra .body th.num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-  details.extra .body a {
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--accent);
-  }
-  details.extra .body a:hover { color: var(--accent-2); border-bottom-color: var(--accent-2); }
+  .chips label.selected .meta { color: rgba(255,255,255,.65); }
 
-  /* ---------- adaptive realtime ---------- */
-  @keyframes pulse-glow {
-    0%   { transform: scale(1);    text-shadow: 0 0 0 rgba(255,94,58,0); }
-    35%  { transform: scale(1.08); text-shadow: 0 0 22px rgba(255,94,58,.55); }
-    100% { transform: scale(1);    text-shadow: 0 0 0 rgba(255,94,58,0); }
-  }
-  @keyframes pulse-glow-light {
-    0%   { transform: scale(1);    text-shadow: 0 0 0 rgba(255,255,255,0); }
-    35%  { transform: scale(1.05); text-shadow: 0 0 22px rgba(255,255,255,.6); }
-    100% { transform: scale(1);    text-shadow: 0 0 0 rgba(255,255,255,0); }
-  }
-  .stat .v { transition: color .15s; }
-  .stat .v.flash { animation: pulse-glow .55s ease; }
-  .stat.hero .v.flash { animation: pulse-glow-light .55s ease; }
-  .v-chip { transition: background .15s, color .15s, transform .15s; }
-  .v-chip.flash {
-    background: var(--accent);
-    color: #fff;
-    transform: scale(1.06);
-  }
-  .live-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--ok);
-    display: inline-block;
-    margin-right: 4px;
-    animation: live-blink 1.4s ease-in-out infinite;
-  }
-  @keyframes live-blink {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(15,138,90,.5); }
-    50%      { opacity: .7; box-shadow: 0 0 0 6px rgba(15,138,90,0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .live-dot, .stat .v, .v-chip, .chips label, .chev { animation: none !important; transition: none !important; }
-    .stat .v.flash, .v-chip.flash { transform: none !important; text-shadow: none !important; }
-    .chips label:hover { transform: none; }
-  }
-
-  /* ---------- gels & snacks ---------- */
-  .gel-grid {
+  /* OUTPUT — hero stat block + geometry grid */
+  .out-hero {
+    border: 1px solid var(--hairline);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 28px 28px;
+    margin: 0 0 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    gap: 10px;
-    margin: 10px 0 14px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 28px;
+    align-items: end;
   }
-  @media (max-width: 640px) { .gel-grid { grid-template-columns: 1fr; } }
-  .gel-card {
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px;
-    background: linear-gradient(180deg,#fff 0%,#fffaf6 100%);
-  }
-  .gel-card h4 {
-    margin: 0 0 4px;
-    font-size: 0.98rem;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex; align-items: center; gap: 8px;
-  }
-  .gel-card .tag {
-    font-size: 0.7rem;
+  .out-hero .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    font-weight: 700;
+    color: var(--hi);
+    font-weight: 500;
+    margin-bottom: 4px;
   }
-  .gel-card .recipe-list {
-    margin: 6px 0 6px;
-    padding-left: 18px;
-    font-size: 0.86rem;
+  .out-hero .v {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(4.5rem, 11vw, 7.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--bg);
+    font-variant-numeric: tabular-nums lining-nums;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .out-hero .v .unit {
+    font-size: 0.28em;
+    font-weight: 700;
+    background: var(--hi);
+    color: var(--ink);
+    padding: 4px 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .out-hero .side {
+    text-align: right;
+    padding-bottom: 14px;
+  }
+  .out-hero .side .lab {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+    margin-bottom: 4px;
+  }
+  .out-hero .side .total {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--bg);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .out-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--hairline);
+    border-top: 0;
+    gap: 0;
+  }
+  .out-grid .cell {
+    padding: 22px 22px 20px;
+    border-right: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    position: relative;
+  }
+  .out-grid .cell:nth-child(3n) { border-right: 0; }
+  .out-grid .cell:nth-last-child(-n+3):nth-child(3n+1),
+  .out-grid .cell:nth-last-child(-n+3):nth-child(3n+1) ~ .cell { border-bottom: 0; }
+  .out-grid .cell .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .out-grid .cell .v {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--ink);
+  }
+  .out-grid .cell .sub {
+    margin-top: 8px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 0.84rem;
+    color: var(--muted);
+  }
+  .out-grid .cell .fn {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: var(--hi-deep);
+    font-weight: 600;
+  }
+  @media (max-width: 720px) {
+    .out-grid { grid-template-columns: 1fr 1fr; }
+    .out-grid .cell:nth-child(3n) { border-right: 1px solid var(--hairline); }
+    .out-grid .cell:nth-child(2n) { border-right: 0; }
+  }
+
+  /* recipe */
+  .recipe {
+    margin: 28px 0 0;
+    padding-top: 28px;
+    border-top: 1px solid var(--hairline);
+  }
+  .recipe .pre {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  .recipe h3 {
+    margin: 0 0 8px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+  .recipe .strategy {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 1rem;
     color: var(--ink-2);
+    line-height: 1.55;
+    max-width: 64ch;
+    margin: 0 0 22px;
+  }
+  table.ing {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+  }
+  table.ing thead th {
+    text-align: left;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding: 12px 12px 12px 0;
+    font-weight: 500;
+  }
+  table.ing tbody td {
+    padding: 16px 12px 16px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    font-size: 0.97rem;
+  }
+  table.ing tbody tr:last-child td { border-bottom: 1px solid var(--hairline); }
+  table.ing td.name { font-weight: 700; color: var(--ink); }
+  table.ing td.num, table.ing th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums lining-nums;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 600;
+  }
+  table.ing th.num { font-family: "JetBrains Mono", monospace; font-weight: 500; }
+
+  /* notes */
+  .notes {
+    margin: 24px 0 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--hairline);
+    display: grid;
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+  }
+  .note {
+    background: var(--bg);
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 18px;
+    font-size: 0.92rem;
     line-height: 1.5;
   }
-  .gel-card .recipe-list li { margin-bottom: 2px; }
-  .gel-card .yield {
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-top: 4px;
+  .note .tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    align-self: start;
+  }
+  .note.ok     .tag { color: var(--green); }
+  .note.warn   .tag { color: #a06600; }
+  .note.danger { background: #fff1ef; }
+  .note.danger .tag { color: var(--red); }
+  .note p { margin: 0; color: var(--ink-2); }
+  .note strong { color: var(--ink); }
+  @media (max-width: 640px) {
+    .note { grid-template-columns: 1fr; gap: 4px; }
   }
 
-  /* ---------- footer ---------- */
-  footer {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 28px 24px 36px;
+  /* ========== FEATURE BLOCKS (gels / gut / bicarb) ========== */
+  .feature {
+    padding: 32px 0 80px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .feature .lede {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 68ch;
+    margin: 0 0 32px;
+    font-weight: 500;
+  }
+  .feature h3.sub {
+    margin: 40px 0 18px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hairline);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .feature h3.sub .small {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .feature p, .feature ul li { color: var(--ink-2); font-size: 1rem; line-height: 1.6; }
+  .feature p { margin: 0 0 14px; max-width: 68ch; }
+  .feature ul { margin: 0 0 14px; padding-left: 22px; }
+  .feature em { color: var(--red); font-style: normal; font-weight: 600; }
+  .feature strong { color: var(--ink); font-weight: 700; }
+
+  /* recipe cards (gels) */
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+    margin: 18px 0 28px;
+  }
+  @media (max-width: 720px) { .rec-grid { grid-template-columns: 1fr; } }
+  .rec-card {
+    background: var(--bg);
+    padding: 22px;
+  }
+  .rec-card .badge {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--hi);
+    padding: 3px 8px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .rec-card h4 {
+    margin: 0 0 10px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
+  }
+  .rec-card ul {
+    margin: 12px 0 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+  .rec-card ul li {
+    font-size: 0.92rem;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .rec-card ul li:last-child { border-bottom: 0; }
+  .rec-card ul li .amt {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 500;
+    font-size: 0.86rem;
+    color: var(--ink);
+    background: var(--bg-2);
+    padding: 2px 8px;
+    flex-shrink: 0;
+  }
+  .rec-card .yield {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* snack / weeks tables */
+  .specs {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 22px;
+  }
+  .specs th, .specs td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+    vertical-align: top;
+  }
+  .specs thead th {
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .specs td.num, .specs th.num {
+    text-align: right;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .specs th.num { font-family: "JetBrains Mono", monospace; font-weight: 500; color: var(--muted); }
+  .specs td.name { font-family: "Hanken Grotesk", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.005em; color: var(--ink); font-size: 0.95rem; }
+  .specs td.phase {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+    background: var(--hi);
+    padding: 8px 12px;
+  }
+  .specs tbody tr:last-child td { border-bottom: 1px solid var(--hairline); }
+
+  /* ========== STATEMENT / PULL ========== */
+  .statement {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 96px 0;
     text-align: center;
-    color: var(--muted);
-    font-size: 0.82rem;
+    border-bottom: 1px solid var(--hairline);
   }
-  @media (max-width: 940px) { footer { padding: 24px 14px 28px; } }
-  footer .heart { color: var(--accent); }
+  .statement blockquote {
+    margin: 0 auto;
+    max-width: 22ch;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+  }
+  .statement blockquote .hi { background: var(--hi); color: var(--ink); padding: 0 0.08em; margin: 0 -0.04em; }
+  .statement cite {
+    display: block;
+    margin-top: 28px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--hi);
+    font-style: normal;
+  }
 
-  /* ---------- print ---------- */
-  @media print {
-    body { background: #fff; }
-    .topbar, .badges, .eyebrow, footer, details.extra summary .chev { display: none; }
-    details.extra { break-inside: avoid; }
-    details.extra .body { display: block !important; }
-    .card, details.extra { box-shadow: none; border-color: #ddd; }
+  /* ========== REFERENCES ========== */
+  .refs {
+    padding: 56px 0 80px;
+    border-bottom: 1px solid var(--hairline);
   }
+  .refs .preamble {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 70ch;
+    margin: 8px 0 24px;
+  }
+  .refs h3 {
+    margin: 30px 0 10px;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--hi-deep);
+    padding-top: 14px;
+    border-top: 1px solid var(--hairline);
+  }
+  .refs ol {
+    margin: 6px 0 14px;
+    padding: 0;
+    list-style: none;
+    counter-reset: fn;
+  }
+  .refs ol li {
+    counter-increment: fn;
+    padding: 14px 0 14px 56px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    position: relative;
+  }
+  .refs ol li::before {
+    content: counter(fn, decimal-leading-zero);
+    position: absolute;
+    left: 0; top: 14px;
+    width: 44px;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 500;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+  }
+  .refs ol li strong { color: var(--ink); font-weight: 700; }
+  .refs a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hi-deep);
+    transition: background .15s;
+  }
+  .refs a:hover { background: var(--hi); }
+
+  /* ========== FOOTER ========== */
+  footer.foot {
+    padding: 40px 0;
+    background: var(--ink);
+    color: var(--bg);
+  }
+  footer.foot .inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  footer.foot .col h4 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--hi);
+    font-weight: 500;
+    margin: 0 0 12px;
+  }
+  footer.foot .brand-foot {
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  footer.foot .brand-foot .slash { color: var(--hi); }
+  footer.foot .meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: rgba(255,255,255,.6);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+  footer.foot ul { list-style: none; padding: 0; margin: 0; }
+  footer.foot ul li { margin: 4px 0; }
+  footer.foot a {
+    color: var(--bg);
+    text-decoration: none;
+    font-family: "Hanken Grotesk", sans-serif;
+    font-size: 0.92rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color .12s;
+  }
+  footer.foot a:hover { border-bottom-color: var(--hi); }
+  @media (max-width: 720px) {
+    footer.foot .inner { grid-template-columns: 1fr; }
+  }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes flash-hi {
+    0%   { background: var(--hi); color: var(--ink); }
+    100% { background: transparent; }
+  }
+  @keyframes flash-inverse {
+    0%   { color: var(--hi); }
+    100% { color: var(--bg); }
+  }
+  .v-chip.flash       { animation: flash-hi .8s ease-out; }
+  .out-grid .v.flash  { background: var(--hi); animation: flash-hi .8s ease-out; }
+  .out-hero .v.flash  { animation: flash-inverse .8s ease-out; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* ========== UTIL ========== */
+  .reveal { padding: 32px 0; }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <span class="brand"><span class="dot">🏃</span> Marathon Fuel</span>
-  <nav class="nav-pills">
-    <a href="#calculator">Calculator</a>
-    <a href="#gut">Gut training</a>
-    <a href="#gels">Gels &amp; snacks</a>
-    <a href="#bicarb">Bicarb</a>
-    <a href="#references">References</a>
-  </nav>
-</div>
-
-<header class="hero">
-  <span class="eyebrow"><span class="live-dot" aria-hidden="true"></span> Live calculator · Backed by 20+ peer-reviewed studies</span>
-  <h1 class="title display">
-    Mix a <span class="grad">high-carb sports drink</span><br>
-    from your kitchen.
-  </h1>
-  <p class="sub">Sugar, salt, water. Sized to your body, your goal, the weather.</p>
-  <p class="micro">The calculator builds a personalized fueling drink using the modern 30–120 g/h carbohydrate ladder and exact gram-weights per bottle. Below: a 6–10 week gut-training ramp, an honest take on bicarbonate, and every reference linked.</p>
-  <div class="badges">
-    <span class="badge-pill"><span class="ico">🥄</span> Pantry-only ingredients</span>
-    <span class="badge-pill"><span class="ico">⚡</span> Updates as you type</span>
-    <span class="badge-pill"><span class="ico">📚</span> Every number cited</span>
+<!-- ============ TOP NAV ============ -->
+<header class="topbar">
+  <div class="container inner">
+    <a class="brand" href="#">
+      MF<span class="slash">/</span>01
+      <span class="sub">Marathon Fuel · v1</span>
+    </a>
+    <nav class="primary" aria-label="Sections">
+      <a href="#calculator">Calculator</a>
+      <a href="#gels">Gels &amp; Snacks</a>
+      <a href="#gut">Gut Training</a>
+      <a href="#bicarb">Bicarb</a>
+      <a href="#references">Sources</a>
+    </nav>
+    <div class="top-right">
+      <span><span class="dot"></span>LIVE</span>
+      <span>OPEN-SOURCE</span>
+    </div>
   </div>
 </header>
 
-<main id="calculator">
-  <section class="card" id="inputs">
-    <h2 class="card-title"><span class="ico-square">⚙</span> Your race</h2>
-
-    <div class="field">
-      <label class="lbl" for="mass"><span><span class="ico" aria-hidden="true">⚖️</span>Body mass</span><span class="v-chip" id="lbl-mass">70 kg</span></label>
-      <input type="number" id="mass" min="35" max="150" step="1" value="70">
-    </div>
-
-    <fieldset class="field">
-      <legend class="lbl"><span><span class="ico" aria-hidden="true">⏱</span>Goal finish time</span><span class="v-chip" id="lbl-time">4:00</span></legend>
-      <div class="row">
-        <input type="number" id="hours" min="2" max="7" step="1" value="4" aria-label="Hours">
-        <input type="number" id="minutes" min="0" max="59" step="1" value="0" aria-label="Minutes">
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container inner">
+    <div class="left">
+      <div>
+        <div class="eyebrow"><span class="tag">MF/01</span> Engineered in a Kitchen · No Hydrogel Required</div>
+        <h1>
+          A pantry<br>
+          <span class="hi">sports drink</span><br>
+          for 42.195&nbsp;km.
+        </h1>
+        <p class="deck">A live, evidence-based calculator that returns grams-per-bottle of sucrose and salt sized to your body, your goal, and the forecast. Eight sections, 22 peer-reviewed sources, zero marketing.</p>
       </div>
-      <span class="hint">Hours and minutes</span>
-    </fieldset>
-
-    <fieldset class="field">
-      <legend class="lbl"><span><span class="ico" aria-hidden="true">🏁</span>Experience &amp; gut tolerance</span></legend>
-      <div class="chips" id="level">
-        <label><input type="radio" name="level" value="beginner"><span class="top"><span class="ico">🌱</span>Beginner</span><span class="meta">First marathon or &gt; 4:30 · ~30 g/h</span></label>
-        <label><input type="radio" name="level" value="recreational" checked><span class="top"><span class="ico">🏃</span>Recreational</span><span class="meta">3:45–4:30 · 45–60 g/h</span></label>
-        <label><input type="radio" name="level" value="subelite"><span class="top"><span class="ico">🚀</span>Sub-elite</span><span class="meta">3:00–3:45 · 60–90 g/h</span></label>
-        <label><input type="radio" name="level" value="elite"><span class="top"><span class="ico">⚡</span>Elite</span><span class="meta">Sub-3:00, gut-trained · 90–120 g/h</span></label>
-      </div>
-    </fieldset>
-
-    <div class="field">
-      <label class="lbl" for="carbs"><span><span class="ico" aria-hidden="true">🍬</span>Hourly carb target</span><span class="v-chip" id="lbl-carbs">55 g/h</span></label>
-      <input type="number" id="carbs" min="20" max="130" step="5" value="55">
-      <span class="hint">Auto-set from your level — adjust within your tolerance.</span>
-    </div>
-
-    <fieldset class="field">
-      <legend class="lbl"><span><span class="ico" aria-hidden="true">🌡</span>Race-day temperature</span></legend>
-      <div class="chips cols-3" id="temp">
-        <label><input type="radio" name="temp" value="cool"><span class="top"><span class="ico">❄️</span>Cool</span><span class="meta">&lt; 12 °C</span></label>
-        <label><input type="radio" name="temp" value="mild" checked><span class="top"><span class="ico">🌤</span>Mild</span><span class="meta">12–20 °C</span></label>
-        <label><input type="radio" name="temp" value="hot"><span class="top"><span class="ico">🔥</span>Hot</span><span class="meta">&gt; 20 °C</span></label>
-      </div>
-    </fieldset>
-
-    <fieldset class="field">
-      <legend class="lbl"><span><span class="ico" aria-hidden="true">💧</span>Sweat profile</span></legend>
-      <div class="chips cols-2" id="sweat">
-        <label><input type="radio" name="sweat" value="normal" checked><span class="top"><span class="ico">🙂</span>Average</span><span class="meta">No visible salt stains</span></label>
-        <label><input type="radio" name="sweat" value="salty"><span class="top"><span class="ico">🧂</span>Salty</span><span class="meta">Salt rings, cramp history</span></label>
-      </div>
-    </fieldset>
-
-    <div class="field">
-      <label class="lbl" for="bottle"><span><span class="ico" aria-hidden="true">🍶</span>Bottle / flask volume</span><span class="v-chip" id="lbl-bottle">500 ml</span></label>
-      <input type="number" id="bottle" min="100" max="1000" step="50" value="500">
-      <span class="hint">Handheld 500 ml · soft flask 250 ml · vest bottle 600 ml.</span>
-    </div>
-
-    <div class="field">
-      <label class="lbl" for="caffeine"><span><span class="ico" aria-hidden="true">☕</span>Caffeine plan</span></label>
-      <select id="caffeine">
-        <option value="none">None</option>
-        <option value="low" selected>Low — 3 mg/kg total</option>
-        <option value="mid">Moderate — 4.5 mg/kg total</option>
-        <option value="high">High — 6 mg/kg total</option>
-      </select>
-      <span class="hint">~half from a pre-race coffee, ~half from instant-coffee crystals stirred into late-race bottles. 1 tsp instant ≈ 60 mg.</span>
-    </div>
-  </section>
-
-  <section class="card" id="outputs">
-    <h2 class="card-title"><span class="ico-square">🎯</span> Your plan</h2>
-
-    <div class="stats">
-      <div class="stat hero">
-        <div class="k">Carbs</div>
-        <div class="v" id="o-carbs">—</div>
-        <div class="sub" id="o-carbs-total"></div>
-      </div>
-      <div class="stat">
-        <div class="k">💧 Fluid</div>
-        <div class="v" id="o-fluid">—</div>
-        <div class="sub" id="o-fluid-total"></div>
-      </div>
-      <div class="stat">
-        <div class="k">🧂 Sodium</div>
-        <div class="v" id="o-sodium">—</div>
-        <div class="sub" id="o-sodium-total"></div>
-      </div>
-      <div class="stat">
-        <div class="k">🥤 Strength</div>
-        <div class="v" id="o-conc">—</div>
-        <div class="sub" id="o-conc-sub"></div>
-      </div>
-      <div class="stat">
-        <div class="k">⚗ Glu : Fru</div>
-        <div class="v" id="o-ratio">—</div>
-        <div class="sub" id="o-ratio-sub"></div>
-      </div>
-      <div class="stat">
-        <div class="k">🍶 Bottles</div>
-        <div class="v" id="o-bottles">—</div>
-        <div class="sub" id="o-bottles-sub"></div>
-      </div>
-      <div class="stat" id="stat-caff">
-        <div class="k">☕ Caffeine</div>
-        <div class="v" id="o-caff">—</div>
-        <div class="sub" id="o-caff-sub"></div>
+      <div class="hero-bottom">
+        <a class="btn" href="#calculator">Build the Drink <span class="arrow">→</span></a>
+        <a class="btn ghost" href="#gels">Gels &amp; Snacks</a>
       </div>
     </div>
 
-    <div class="recipe">
-      <div class="recipe-head">
-        <div class="badge-shaker">🥤</div>
-        <div>
-          <h3 id="r-name">—</h3>
-          <p class="strategy" id="r-strategy"></p>
-        </div>
+    <aside class="spec-card" aria-label="Sample spec">
+      <div class="head">
+        <span class="t">MF/01 · Recipe</span>
+        <span class="ref">SPEC SHEET</span>
       </div>
-      <table class="ing">
-        <thead>
-          <tr><th>Ingredient</th><th class="num">Per bottle</th><th class="num">Per liter</th><th class="num">Total race</th></tr>
-        </thead>
-        <tbody id="r-ing"></tbody>
-      </table>
-      <div class="notes" id="r-notes"></div>
-    </div>
-  </section>
-</main>
-
-<div class="extras-wrap">
-
-  <details class="extra" id="gut">
-    <summary>
-      <span class="sum-ico">🌀</span>
-      <span class="sum-text">
-        <span class="t">Train your gut — 6 to 10 weeks before</span>
-        <span class="d">Why the ladder matters and how to ramp without trashing your stomach.</span>
-      </span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="body">
-      <p>The intestinal carb transporters (SGLT1 for glucose, GLUT5 for fructose) upregulate with repeated exposure during exercise. Start 6–10 weeks before race day and ramp on your long runs at goal pace.</p>
-      <table>
-        <thead><tr><th>Phase</th><th class="num">Long-run carb target</th><th class="num">Drink %</th><th>What to practice</th></tr></thead>
-        <tbody>
-          <tr><td>Weeks 1–2</td><td class="num">30 g/h</td><td class="num">6 %</td><td>Drink on time (every 15–20 min). Get used to swallowing while breathing hard.</td></tr>
-          <tr><td>Weeks 3–4</td><td class="num">45–60 g/h</td><td class="num">6–8 %</td><td>Add salt to taste. Practice grabbing the bottle without breaking pace.</td></tr>
-          <tr><td>Weeks 5–6</td><td class="num">60–75 g/h</td><td class="num">8 %</td><td>One long run at marathon pace with race-day breakfast.</td></tr>
-          <tr><td>Weeks 7–8</td><td class="num">75–90 g/h</td><td class="num">8–10 %</td><td>Full dress rehearsal: bottle, salt, coffee timing, exact recipe.</td></tr>
-          <tr><td>Weeks 9+ (advanced)</td><td class="num">90–100 g/h</td><td class="num">10–12 %</td><td>Concentrated flask + plain-water chase. Only if you tolerated week 7–8 cleanly.</td></tr>
-        </tbody>
-      </table>
-      <div class="notes">
-        <div class="note ok"><strong>Key rules.</strong> Train the gut at <em>race intensity</em>, not just easy runs. Always pair gut-training sessions with the planned race-day breakfast. Never introduce a new fuel in the last 2 weeks before race day.</div>
-        <div class="note warn"><strong>If you get GI distress</strong> (bloating, cramping, nausea, urgent diarrhea): drop one phase back, hold for another 2 weeks, then try again. Don't push through — concentrated carbs hitting a non-emptying stomach makes it worse.</div>
-        <div class="note ok"><strong>Race-week tapering.</strong> 3 days out: low-fiber meals (no whole grains, no salads, no bran, no beans). Carbohydrate-load to ~8–10 g/kg/day. The day before: low-fat, mostly white rice/pasta/bread/potato.</div>
+      <div class="figure">
+        <div class="k">Carbohydrate target</div>
+        <div class="v"><span class="tab-nums">75</span><span class="unit">g/h</span></div>
+        <div class="sub">Sub-elite tier · 60–90 g/h band · sucrose only</div>
       </div>
-    </div>
-  </details>
-
-  <details class="extra" id="bicarb">
-    <summary>
-      <span class="sum-ico">🧪</span>
-      <span class="sum-text">
-        <span class="t">Sodium bicarbonate — optional buffer</span>
-        <span class="d">Worth a few percent at high relative intensities. Requires practice and GI tolerance.</span>
-      </span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="body">
-      <p>Plain baking soda (NaHCO<sub>3</sub>) buffers blood acidity and can squeeze out a few percent of performance — strongest evidence is at higher relative intensities (5k–10k pace). For a marathon, benefit is smaller and more individual; only worth it if you'll be running near 80 % V&#775;O<sub>2</sub>max and have practiced it.</p>
-      <h3>Dose &amp; timing for your body mass</h3>
-      <table>
-        <thead><tr><th>Protocol</th><th class="num">Dose</th><th class="num">For <span id="b-mass">70</span> kg</th><th>When</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>Conservative (lower GI risk)</td>
-            <td class="num">0.2 g/kg</td>
-            <td class="num" id="b-cons">14 g (~2¾ tsp)</td>
-            <td>Split: half 180 min pre-start, half 90 min pre-start, both <em>with</em> a carb-rich meal.</td>
-          </tr>
-          <tr>
-            <td>Standard (most studied)</td>
-            <td class="num">0.3 g/kg</td>
-            <td class="num" id="b-std">21 g (~4 tsp)</td>
-            <td>Split: 3–4 portions every 30–40 min, finishing 60–90 min before start, each with food.</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="muted">1 level teaspoon of baking soda ≈ 5–6 g. Dissolve in ~250 ml water; chase each dose with another ~250 ml plain water and food (a bagel, banana, oats).</p>
-      <div class="notes">
-        <div class="note danger"><strong>GI risk is real.</strong> Common: bloating, nausea, diarrhea, vomiting. Mitigate by (1) split-dosing, (2) taking with carb-rich food, (3) drinking plenty of water, (4) starting at 0.2 g/kg the first 2–3 times you trial it. <strong>Never race-day-debut bicarb.</strong> Practice it 3–5 times on long runs first.</div>
-        <div class="note warn"><strong>Skip bicarb if</strong> you have high blood pressure, kidney issues, or a history of bicarb-induced GI distress that didn't resolve with practice. The extra sodium (about 1100 mg sodium per 3 g of baking soda) also stacks on top of your in-race sodium plan — don't double up.</div>
-        <div class="note ok"><strong>How to take it.</strong> Mix the dose into a glass of water (it fizzes / tastes salty — lemon juice helps). Drink with your pre-race meal. The buffering peak is roughly 90–180 min after the last dose, which is why split-loading 60–180 min pre-start works.</div>
-        <div class="note ok"><strong>Marathon context.</strong> Bicarb's evidence base is strongest for 1–10 min all-out efforts; for the marathon, expect a smaller and more individual benefit. If your goal pace is conversational, the GI risk likely outweighs the gain — skip it.</div>
+      <div class="geom">
+        <div class="cell"><div class="k">Fluid</div><div class="v tab-nums">550 ml/h</div></div>
+        <div class="cell"><div class="k">Sodium</div><div class="v tab-nums">550 mg/h</div></div>
+        <div class="cell"><div class="k">Drink %</div><div class="v tab-nums">8 %</div></div>
+        <div class="cell"><div class="k">Glu : Fru</div><div class="v tab-nums">1.00 : 1</div></div>
       </div>
-    </div>
-  </details>
+    </aside>
+  </div>
+</section>
 
-  <details class="extra" id="gels">
-    <summary>
-      <span class="sum-ico">🥄</span>
-      <span class="sum-text">
-        <span class="t">Beyond the bottle — DIY gels &amp; real-food snacks</span>
-        <span class="d">When liquid isn't enough: pantry gel recipes, rice cakes, and which solid foods survive race-day pace.</span>
-      </span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="body">
-      <p>Drinks deliver carbs + fluid + sodium together — but you can hit a fueling ceiling if your stomach won't take the volume. Gels (semi-solid, ~60&nbsp;% carb concentration) and real food let you stack carbs on top of your drink without diluting your hydration. <strong>Pfeiffer et&nbsp;al.&nbsp;2010</strong> showed exogenous CHO oxidation from a gel matches that of a drink at matched intake — so the form mostly affects palatability and GI tolerance, not absorption.</p>
-
-      <h3>DIY gel recipes (60&nbsp;% carb concentration, pantry-only)</h3>
-      <p class="muted">Target ~20–25 g carbs per ~30–40 g serving. Each recipe below makes 4–6 servings. Squeeze into a small soft flask or zip-lock corner.</p>
-      <div class="gel-grid">
-        <div class="gel-card">
-          <h4>🍯 Honey-salt gel <span class="tag">classic</span></h4>
-          <ul class="recipe-list">
-            <li>100 g honey</li>
-            <li>0.5 g salt (a pinch)</li>
-            <li>1 tsp lemon juice (helps it pour)</li>
-            <li>Optional: ½ tsp instant coffee = ~30 mg caffeine</li>
-          </ul>
-          <div class="yield">≈ 80 g carbs · ~1:1 glu:fru · 4 × 25-g servings</div>
-        </div>
-        <div class="gel-card">
-          <h4>🍁 Maple-syrup gel <span class="tag">smooth</span></h4>
-          <ul class="recipe-list">
-            <li>100 g pure maple syrup (Grade A)</li>
-            <li>0.5 g salt</li>
-            <li>5 ml water if too thick</li>
-          </ul>
-          <div class="yield">≈ 67 g carbs · mostly sucrose · 3 × 22-g servings</div>
-        </div>
-        <div class="gel-card">
-          <h4>🌴 Date paste gel <span class="tag">whole-food</span></h4>
-          <ul class="recipe-list">
-            <li>4 Medjool dates (≈70 g, pitted)</li>
-            <li>40–50 ml water</li>
-            <li>0.5 g salt · pinch cinnamon</li>
-            <li>Blend until smooth</li>
-          </ul>
-          <div class="yield">≈ 50 g carbs · 2–3 × 22-g servings · refrigerate</div>
-        </div>
-        <div class="gel-card">
-          <h4>🌾 Rice-syrup + fructose gel <span class="tag">high-rate</span></h4>
-          <ul class="recipe-list">
-            <li>80 g brown rice syrup</li>
-            <li>20 g pure fructose powder (1:0.8 glu:fru)</li>
-            <li>0.5 g salt · splash water to mix</li>
-          </ul>
-          <div class="yield">≈ 80 g carbs · gut-trained athletes only · 4 servings</div>
-        </div>
-      </div>
-
-      <h3>Real-food snacks — what actually works at pace</h3>
-      <table>
-        <thead><tr><th>Snack</th><th class="num">Carbs</th><th>Best pace</th><th>Caveats</th></tr></thead>
-        <tbody>
-          <tr><td><strong>🍙 Allen Lim rice cake</strong> (50 g)</td><td class="num">~25 g</td><td>4 h+ marathons, ultras</td><td>Recipe below. Easy on stomach, palate-cleansing.</td></tr>
-          <tr><td><strong>🌴 Medjool date</strong> (1 large, 24 g)</td><td class="num">~16 g</td><td>30–45 min top-ups</td><td>High fructose — cap at 2–3 per hour.</td></tr>
-          <tr><td><strong>🍌 Banana</strong> (medium, 120 g)</td><td class="num">~25 g</td><td>Aid-station grab</td><td>Some fiber; eat at walking pace.</td></tr>
-          <tr><td><strong>🐻 Gummy candy</strong> (10 pieces, ~30 g)</td><td class="num">~25 g</td><td>Any pace</td><td>Sucrose + glucose syrup — fast, easy, cheap.</td></tr>
-          <tr><td><strong>🥨 Pretzels</strong> (15 sticks, ~30 g)</td><td class="num">~22 g + 400 mg Na</td><td>Slow-pace sodium top-up</td><td>Hard to chew while breathing hard.</td></tr>
-          <tr><td><strong>🥔 Boiled potato + salt</strong> (1 small)</td><td class="num">~20 g</td><td>Ultra crew pickup</td><td>Slow chew, but classic ultra fuel.</td></tr>
-          <tr><td><strong>🍞 White-bread &amp; jam</strong> (½ sandwich)</td><td class="num">~25 g</td><td>4:30+ marathons</td><td>Fat content slows emptying; use sparingly.</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Allen Lim rice cakes — the recipe</h3>
-      <p>From Skratch Labs / <em>Feed Zone Portables</em> (Lim &amp; Thomas, 2011). The gold standard for slower-paced endurance fueling — cooked sushi rice held together with egg, sweetened lightly, salted.</p>
-      <ul>
-        <li>1½ cups (≈300 g cooked) short-grain white rice</li>
-        <li>2 eggs, lightly beaten</li>
-        <li>50 g cane sugar · ½ tsp salt · pinch cinnamon</li>
-        <li>Cook eggs &amp; sugar in a pan until soft scramble; fold in warm rice; press into a parchment-lined dish; chill 30 min; cut into 50 g squares; wrap in foil.</li>
-      </ul>
-      <p class="muted">Each square ≈ 25 g carbs + ~100 mg sodium. Survives a long-run bottle pocket for 2–3 hours. Swap sugar for maple syrup for a deeper flavor; add a teaspoon of espresso powder for a caffeine bump.</p>
-
-      <h3>How to actually use them on race day</h3>
-      <ul>
-        <li><strong>Stack, don't swap.</strong> Use gels/snacks <em>on top of</em> your drink, not instead of it. Drink is your fluid + sodium base; gels are a carb top-up.</li>
-        <li><strong>1 gel ≈ 25 g carbs.</strong> One every 25–45 min depending on your hourly target. If your drink already gives you 60 g/h and you want 90 g/h, that's one extra ~25-g gel each half hour.</li>
-        <li><strong>Always chase with water.</strong> Gels are ~60&nbsp;% carb concentration — without a 100–150 ml water chase from an aid station, they sit in the stomach and create the slow-emptying feeling that triggers GI distress.</li>
-        <li><strong>Match form to pace.</strong> Faster than ~7&nbsp;min/mi (4:20 min/km): liquids + gels only. Slower than ~8&nbsp;min/mi (5:00 min/km): real food is a viable variety. In between: try in training.</li>
-        <li><strong>Rehearse the exact stack ≥ 4×.</strong> Costa &amp; Gaskell&nbsp;2025 (SDA/USSF position statement) put gut-training and tested-fueling as the two most-evidenced GI mitigators.</li>
-      </ul>
-
-      <h3>Risks &amp; common mistakes</h3>
-      <div class="notes">
-        <div class="note danger"><strong>Fructose stacking.</strong> Your drink already has ~50 % fructose (from sucrose). Add a honey or date gel (also ~50 % fructose) and you can blow past the GLUT5 ceiling (~60 g/h fructose) — bloating, urgent diarrhea. If you're going above 75 g/h total carbs, lean on rice-syrup or maltodextrin-based fuels for the extra grams.</div>
-        <div class="note danger"><strong>Concentrated carbs without water.</strong> A gel is ~3× more concentrated than your drink. Without a 100–150 ml plain-water chase, gastric emptying stalls and you'll feel like you swallowed a brick. <em>Always</em> take the gel within 1 min of an aid station.</div>
-        <div class="note warn"><strong>Caffeine accumulation.</strong> Many commercial gels carry 25–100 mg caffeine each. Stacked with the in-bottle instant coffee + a pre-race espresso, you can hit 6 mg/kg by halfway. Above ~9 mg/kg gives no further benefit and adds jitters/GI risk (Burke 2008). Track your total.</div>
-        <div class="note warn"><strong>Hidden fiber + fat in "natural" snacks.</strong> Whole-grain bread, nut butter, granola bars — popular pantry picks, but the fiber + fat slows gastric emptying. For a marathon, prefer refined-grain (white rice, white bread, sushi rice) and skip nut butters race-day.</div>
-        <div class="note warn"><strong>Hygiene for DIY gels.</strong> Honey- and maple-only gels are shelf-stable for days. Date or rice-cake gels need refrigeration until race morning. Mix the night before; carry in soft flasks washed with hot water + baking soda.</div>
-        <div class="note ok"><strong>"Hydrogel" is mostly marketing.</strong> Maurten popularized the sodium-alginate + pectin "hydrogel" claim. Two independent RCTs (McCubbin et al. 2020; Li et al. 2026 review) found no improvement in glucose availability, CHO oxidation, GI symptoms, or performance vs concentration-matched controls. The Maurten product works because of <em>what</em> is in it (1:0.8 malto:fru at 16&nbsp;% concentration), not because of the gel matrix. You can reproduce the function with sucrose at 8–10&nbsp;% + a water chase.</div>
-        <div class="note ok"><strong>Test in training, not on race day.</strong> Rehearse each gel recipe and snack at goal marathon pace at least 3–4 times during gut-training weeks 5–8. If it doesn't work in training, it won't work on race day.</div>
-      </div>
-    </div>
-  </details>
-
-  <details class="extra">
-    <summary>
-      <span class="sum-ico">📐</span>
-      <span class="sum-text">
-        <span class="t">Reference tables &amp; science notes</span>
-        <span class="d">Carb ladder, sodium targets, pantry chemistry, concentration zones.</span>
-      </span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="body">
-      <h3>Carbohydrate ladder</h3>
-      <table>
-        <thead><tr><th>Runner</th><th>Finish</th><th>Target g/h</th><th>Carb mix</th></tr></thead>
-        <tbody>
-          <tr><td>Beginner / first marathon</td><td>&gt; 4:30</td><td>~30</td><td>Sucrose alone (gut-training start point)</td></tr>
-          <tr><td>Recreational</td><td>3:45–4:30</td><td>45–60</td><td>Sucrose alone</td></tr>
-          <tr><td>Sub-elite</td><td>3:00–3:45</td><td>60–90</td><td>Sucrose alone — its 1:1 split covers both transporters</td></tr>
-          <tr><td>Elite / gut-trained</td><td>&lt; 3:00</td><td>90–120</td><td>Concentrated flask + water; +pure fructose above ~100 g/h</td></tr>
-        </tbody>
-      </table>
-      <p class="muted">The Burke et al. 2019 IAAF Consensus marathon row (events &gt; 2.5 h) sits at <strong>60–90 g/h</strong> for trained runners. The 30 g/h tier is a gut-training starting point (Jeukendrup 2017). The 90–120 g/h tier is supported by Hearris 2022 (peak exogenous oxidation 1.56–1.66 g/min at 120 g/h), Podlogar et al. 2022, and Viribay et al. 2020 (lower muscle-damage markers at 120 vs 60/90 g/h).</p>
-
-      <h3>Sodium targets</h3>
-      <table>
-        <thead><tr><th>Context</th><th>Sodium</th><th>Salt per L (drink as sole source)</th></tr></thead>
-        <tbody>
-          <tr><td>Cool, average sweater</td><td>300–500 mg/h</td><td>0.75–1.25 g/L</td></tr>
-          <tr><td>Mild, average sweater</td><td>500–700 mg/h</td><td>1.25–1.75 g/L</td></tr>
-          <tr><td>Hot or salty sweater</td><td>700–1000 mg/h</td><td>1.75–2.5 g/L</td></tr>
-        </tbody>
-      </table>
-      <p class="muted">1 g table salt ≈ 393 mg sodium (Na 22.99 / NaCl 58.44; the calculator rounds to 400 mg — an over-estimate of ~1.7 %, negligible at race-day doses). Palatability ceiling ~2.5 g salt/L; above that, take a salt capsule or salty food alongside.</p>
-      <p class="muted">Sweat [Na+] varies widely — Lara et al. 2016 measured 42.9 ± 18.7 mmol/L in 157 marathoners (range 7–96 mmol/L), so the salty-sweater tier is meaningful and individual practice matters more than the population average.</p>
-
-      <h3>Pantry chemistry</h3>
-      <ul>
-        <li><strong>Sucrose</strong> (cane/beet sugar) → gut hydrolysis ≈ 50 % glucose + 50 % fructose. Natural 1:1 ratio; for sports-nutrition labelling 1 g sucrose = 1 g carbs.</li>
-        <li><strong>Salt</strong> (NaCl) replaces sweat sodium; sodium also co-transports glucose across the gut wall via SGLT1.</li>
-        <li><strong>Lemon juice / citric acid</strong> — flavor only; small contribution to palatability of a sweet, salty drink.</li>
-        <li><strong>Instant coffee</strong> — 60 mg caffeine per teaspoon, ~95 mg per brewed mug; the simplest way to dose 3–6 mg/kg without tablets.</li>
-      </ul>
-
-      <h3>Concentration zones</h3>
-      <ul>
-        <li><strong>≤ 8 %</strong>: fast gastric emptying, isotonic-ish, single-bottle strategy works (Murray 1999).</li>
-        <li><strong>8–10 %</strong>: still tolerable; gut-train before relying on it.</li>
-        <li><strong>10–12 %</strong>: home-feasible concentrated flask. Chase with plain water from aid stations.</li>
-        <li><strong>14–16 %</strong>: Maurten Drink Mix 320 territory (80 g per 500 ml). Works only because the sodium alginate + pectin hydrogel masks osmolality — not reproducible at home with sucrose alone.</li>
-        <li><strong>&gt; 16 %</strong>: not recommended without a hydrogel; GI distress likely.</li>
-      </ul>
-
-      <h3>Safety</h3>
-      <ul>
-        <li>Hyponatremia red flags: headache, confusion, swelling, weight <em>gain</em> mid-race — stop plain water, eat salt.</li>
-        <li>GI distress: stop concentrated carbs, switch to small sips of plain water, walk if needed.</li>
-        <li>Pre-race meal: low-fiber, low-fat, carb-dominant. No new foods.</li>
-        <li>Mix the drink fully — undissolved sugar at the bottom skews the last sips.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details class="extra" id="references">
-    <summary>
-      <span class="sum-ico">📚</span>
-      <span class="sum-text">
-        <span class="t">References — every number traced to a source</span>
-        <span class="d">22+ peer-reviewed papers and governing-body consensus statements.</span>
-      </span>
-      <span class="chev">▾</span>
-    </summary>
-    <div class="body">
-      <p class="muted">Every claim on this page traces to a peer-reviewed paper or sports-governing-body consensus. PMC and journal links are open-access where available. Run <code>references/fetch-references.sh</code> from a machine with normal outbound network access to download all PDFs locally to the <code>references/</code> folder.</p>
-
-      <h3>Carbohydrate intake &amp; oxidation</h3>
-      <ol>
-        <li><strong>Burke LM, Jeukendrup AE, Jones AM, Mooses M.</strong> Contemporary Nutrition Strategies to Optimize Performance in Distance Runners and Race Walkers. <em>Int J Sport Nutr Exerc Metab</em> 2019;29(2):117–129. PMID 30943841. <a href="https://journals.humankinetics.com/view/journals/ijsnem/29/2/article-p117.xml" target="_blank" rel="noopener">Journal</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30943841/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: 60–90 g/h marathon CHO target.</em></li>
-        <li><strong>Hearris MA et al.</strong> Multiple transportable carbohydrates ingested at 120 g·h−1: drink, gel, chew, and mix formats. <em>J Appl Physiol</em> 2022;132(6):1394–1406. <a href="https://journals.physiology.org/doi/full/10.1152/japplphysiol.00091.2022" target="_blank" rel="noopener">Journal</a>. <em>Source for: peak exogenous oxidation 1.56–1.66 g/min at 120 g/h.</em></li>
-        <li><strong>Jentjens RL, Jeukendrup AE.</strong> High rates of exogenous carbohydrate oxidation from a mixture of glucose and fructose ingested during prolonged cycling. <em>Br J Nutr</em> 2005;93(4):485–492. <a href="https://www.cambridge.org/core/journals/british-journal-of-nutrition/article/5978786559A73EDEFC6DCD272A773E3A" target="_blank" rel="noopener">Journal</a>. <em>Source for: 1.75 g/min GLU+FRU vs 1.26 g/min GLU alone.</em></li>
-        <li><strong>Trommelen J et al.</strong> Fructose and Sucrose Intake Increase Exogenous CHO Oxidation during Exercise. <em>Nutrients</em> 2017;9(2):167. PMC 5331598. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5331598/" target="_blank" rel="noopener">PMC</a>. <em>Source for: sucrose co-ingestion equivalent to glucose+fructose mix.</em></li>
-        <li><strong>Jentjens RL, Achten J, Jeukendrup AE.</strong> High oxidation rates from combined carbohydrates ingested during exercise. <em>Metabolism</em> 2005;54(5):610–618. <a href="https://pubmed.ncbi.nlm.nih.gov/15877301/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: sucrose alone at 1.2 g/min → 0.98 g/min exogenous oxidation.</em></li>
-        <li><strong>Podlogar T, Wallis GA.</strong> New Horizons in CHO Research and Application for Endurance Athletes. <em>Sports Med</em> 2022;52(Suppl 1):5–23. PMC 9734239. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9734239/" target="_blank" rel="noopener">PMC</a>. <em>Source for: modern 30–120 g/h personalized ladder.</em></li>
-        <li><strong>Viribay A et al.</strong> Effects of 120 g/h CHO intake during a marathon on running performance and muscle damage. <em>Nutrients</em> 2020;12(5):1367. PMC 7284742. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7284742/" target="_blank" rel="noopener">PMC</a>. <em>Source for: lower CK/LDH at 120 vs 60/90 g/h.</em></li>
-        <li><strong>Podlogar T et al.</strong> Exogenous CHO oxidation at 90 vs 120 g/h. <em>Eur J Appl Physiol</em> 2022;122(11):2393–2401. PMC 9560939. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9560939/" target="_blank" rel="noopener">PMC</a>. <em>Source for: 120 g/h at 0.8:1 fru:malto raises oxidation vs 90 g/h.</em></li>
-      </ol>
-
-      <h3>Gastric emptying &amp; gut training</h3>
-      <ol start="9">
-        <li><strong>Murray R et al.</strong> The effects of glucose, fructose, and sucrose ingestion during exercise. <em>Int J Sport Nutr</em> 1999;9(3):263–274. <a href="https://pubmed.ncbi.nlm.nih.gov/10477362/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: 8 % CHO slows gastric emptying vs water/4/6 %.</em></li>
-        <li><strong>Jeukendrup AE.</strong> Training the Gut for Athletes. <em>Sports Med</em> 2017;47(Suppl 1):101–110. PMC 5371619. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5371619/" target="_blank" rel="noopener">PMC</a>. <em>Source for: SGLT1/GLUT5 upregulation, 4–10 week ramp.</em></li>
-      </ol>
-
-      <h3>Hydration &amp; sodium</h3>
-      <ol start="11">
-        <li><strong>Lara B et al.</strong> Interindividual variability in sweat electrolyte concentration in marathoners. <em>Eur J Appl Physiol</em> 2016. PMC 4966593. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966593/" target="_blank" rel="noopener">PMC</a>. <em>Source for: sweat [Na+] 42.9 ± 18.7 mmol/L, range 7–96.</em></li>
-        <li><strong>Sawka MN, Cheuvront SN, Kenefick RW.</strong> Hypohydration and Human Performance — ACSM. <em>Med Sci Sports Exerc</em> 2007 / 2015 update. <a href="https://pubmed.ncbi.nlm.nih.gov/17277604/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: 0.5–2.5 L/h marathoner sweat-rate range, fluid-ml/kg/h heuristic.</em></li>
-        <li><strong>Hoffman MD, Stuempfle KJ.</strong> Sodium intake during an ultramarathon does not prevent muscle cramping, dehydration, or hyponatremia. <em>Sports Med</em> 2015. PMC 4688305. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4688305/" target="_blank" rel="noopener">PMC</a>. <em>Source for: overdrinking water, not sodium loss, is dominant EAH risk factor.</em></li>
-      </ol>
-
-      <h3>Caffeine &amp; bicarbonate</h3>
-      <ol start="14">
-        <li><strong>Burke LM.</strong> Caffeine and sports performance. <em>Appl Physiol Nutr Metab</em> 2008;33(6):1319–1334. <a href="https://pubmed.ncbi.nlm.nih.gov/19088794/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: 3–6 mg/kg dose range, 1 h pre-exercise, no benefit above 9 mg/kg.</em></li>
-        <li><strong>Grgic J et al.</strong> ISSN exercise &amp; sports nutrition position stand: sodium bicarbonate. <em>J Int Soc Sports Nutr</em> 2021;18:61. PMC 8427947. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8427947/" target="_blank" rel="noopener">PMC</a>. <em>Source for: 0.2–0.3 g/kg dose, 60–180 min pre, split-dose with food.</em></li>
-      </ol>
-
-      <h3>Gels, real-food &amp; gastrointestinal tolerance</h3>
-      <ol start="16">
-        <li><strong>Pfeiffer B, Stellingwerff T, Zaltas E, Jeukendrup AE.</strong> CHO oxidation from a CHO gel compared with a drink during exercise. <em>Med Sci Sports Exerc</em> 2010;42(11):2038–2045. PMID 20404763. <a href="https://pubmed.ncbi.nlm.nih.gov/20404763/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: gels deliver equivalent exogenous CHO oxidation to drinks at matched intake.</em></li>
-        <li><strong>Pfeiffer B et al.</strong> Nutritional intake and gastrointestinal problems during competitive endurance events. <em>Med Sci Sports Exerc</em> 2012;44(2):344–351. PMID 21775906. <a href="https://pubmed.ncbi.nlm.nih.gov/21775906/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: real-world GI symptom prevalence and CHO intake patterns in marathon &amp; Ironman.</em></li>
-        <li><strong>McCubbin AJ, Zhu A, Gaskell SK, Costa RJS.</strong> Hydrogel Carbohydrate-Electrolyte Beverage Does Not Improve Glucose Availability, Substrate Oxidation, GI Symptoms or Performance vs Matched Placebo. <em>Int J Sport Nutr Exerc Metab</em> 2020;30(1):25–33. PMID 31629348. <a href="https://pubmed.ncbi.nlm.nih.gov/31629348/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: alginate/pectin hydrogel offers no benefit over concentration-matched CES.</em></li>
-        <li><strong>Li P, Song Q, Xu N.</strong> Plant-derived alginate polysaccharide hydrogels in sport &amp; exercise nutrition. <em>Front Nutr</em> 2026. PMID 42039889. <a href="https://pubmed.ncbi.nlm.nih.gov/42039889/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: narrative review confirming inconsistent hydrogel benefit across endpoints.</em></li>
-        <li><strong>Costa RJS, Gaskell SK, Henningsen K, et al.</strong> Sports Dietitians Australia &amp; Ultra Sports Science Foundation Joint Position Statement: Prevention &amp; Management of Exercise-Associated Gastrointestinal Perturbations. <em>Sports Med</em> 2025. PMID 40195264. <a href="https://pubmed.ncbi.nlm.nih.gov/40195264/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: gut-training, FODMAP awareness, and hydration as most-evidenced GI mitigators.</em></li>
-        <li><strong>Costa RJS, Gaskell SK.</strong> A Practitioner's Guide to Identifying, Assessing, and Managing Gut Issues in Athletes. <em>Int J Sports Med</em> 2026. PMID 42155582. <a href="https://pubmed.ncbi.nlm.nih.gov/42155582/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: four-phase athlete support pathway for EIGS.</em></li>
-        <li><strong>Lim AL, Thomas BC.</strong> <em>Feed Zone Portables: A Cookbook of On-the-Go Food for Athletes.</em> VeloPress, 2013. ISBN 978-1937715007. <a href="https://www.skratchlabs.com/" target="_blank" rel="noopener">Skratch Labs</a>. <em>Source for: rice-cake recipe and refined-carb real-food fueling.</em></li>
-      </ol>
-
-      <h3>Commercial reference</h3>
-      <ol start="23">
-        <li><strong>Maurten Drink Mix 320</strong> — 80 g carbs per 500 ml = 16 % w/v; ingredients: maltodextrin, fructose, sodium alginate, pectin, salt, sodium bicarbonate. <a href="https://www.maurten.com/products/drink-mix-320-box-us" target="_blank" rel="noopener">Maurten product page</a>. <em>Source for: hydrogel mechanism, 16 % drink concentration benchmark.</em></li>
-      </ol>
-
-      <h3>A note on PDFs</h3>
-      <p class="muted">The sandbox where this page was assembled blocks outbound traffic to PMC / journal hosts, so the <code>references/</code> folder ships empty. The script <a href="https://github.com/mmichelli/High-Carb-Sports-Drinks/blob/main/references/fetch-references.sh"><code>fetch-references.sh</code></a> in the repo will pull all open-access PDFs in one go when run from a normal network.</p>
-    </div>
-  </details>
-
+<!-- ============ TICKER ============ -->
+<div class="ticker" aria-hidden="true">
+  <div class="inner">
+    <span><span class="star">★</span> SUCROSE 1:1 GLU:FRU</span>
+    <span><span class="star">★</span> SALT REPLACES SWEAT</span>
+    <span><span class="star">★</span> 30–120 G/H LADDER</span>
+    <span><span class="star">★</span> 6–10 WEEK GUT RAMP</span>
+    <span><span class="star">★</span> NEVER RACE NEW FUEL</span>
+    <span><span class="star">★</span> OPEN-SOURCE</span>
+    <span><span class="star">★</span> SUCROSE 1:1 GLU:FRU</span>
+    <span><span class="star">★</span> SALT REPLACES SWEAT</span>
+    <span><span class="star">★</span> 30–120 G/H LADDER</span>
+    <span><span class="star">★</span> 6–10 WEEK GUT RAMP</span>
+    <span><span class="star">★</span> NEVER RACE NEW FUEL</span>
+    <span><span class="star">★</span> OPEN-SOURCE</span>
+  </div>
 </div>
 
-<footer>
-  Built with <span class="heart">♥</span> for runners who'd rather mix it themselves. Free, open-source, no ads.
+<!-- ============ I · CALCULATOR ============ -->
+<div class="container" id="calculator">
+  <div class="section-head">
+    <span class="idx">01 / CALCULATOR</span>
+    <h2>Build the<br>drink.</h2>
+    <span class="meta">Updates live · No accounts</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="calc">
+    <!-- INPUTS -->
+    <section class="panel" id="inputs">
+      <div class="panel-head">
+        <h3>Your race</h3>
+        <span class="label ref">Inputs · 6</span>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="mass"><span>Body mass</span><span class="v-chip" id="lbl-mass">70 kg</span></label>
+        <div class="slider-wrap">
+          <div class="slider-display">
+            <div class="num tab-nums"><span id="d-mass">70</span><span class="unit">kg</span></div>
+            <div class="range">35 — 150 kg</div>
+          </div>
+          <input type="range" class="slider" id="mass" min="35" max="150" step="1" value="70" aria-label="Body mass in kilograms">
+          <div class="ticks"><span>35</span><span>70</span><span>110</span><span>150</span></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="time-min"><span>Goal finish time</span><span class="v-chip" id="lbl-time">4:00</span></label>
+        <div class="slider-wrap">
+          <div class="slider-display">
+            <div class="num tab-nums"><span id="d-time">4:00</span><span class="unit">h:mm</span></div>
+            <div class="range">2:00 — 7:00</div>
+          </div>
+          <input type="range" class="slider" id="time-min" min="120" max="420" step="5" value="240" aria-label="Goal finish time in minutes">
+          <div class="ticks"><span>2:00</span><span>3:30</span><span>5:00</span><span>6:30</span></div>
+          <input type="hidden" id="hours" value="4">
+          <input type="hidden" id="minutes" value="0">
+        </div>
+      </div>
+
+      <fieldset class="field">
+        <legend class="lbl"><span>Experience &amp; gut tolerance</span></legend>
+        <div class="chips" id="level">
+          <label><input type="radio" name="level" value="beginner"><span class="ballot" aria-hidden="true"></span><span class="top">Beginner</span><span class="meta">First marathon &middot; &gt; 4:30 &middot; ~30 g/h</span></label>
+          <label><input type="radio" name="level" value="recreational" checked><span class="ballot" aria-hidden="true"></span><span class="top">Recreational</span><span class="meta">3:45–4:30 &middot; 45–60 g/h</span></label>
+          <label><input type="radio" name="level" value="subelite"><span class="ballot" aria-hidden="true"></span><span class="top">Sub-elite</span><span class="meta">3:00–3:45 &middot; 60–90 g/h</span></label>
+          <label><input type="radio" name="level" value="elite"><span class="ballot" aria-hidden="true"></span><span class="top">Elite</span><span class="meta">Sub-3:00, gut-trained &middot; 90–120 g/h</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label class="lbl" for="carbs"><span>Hourly carb target</span><span class="v-chip" id="lbl-carbs">55 g/h</span></label>
+        <input type="number" id="carbs" min="20" max="130" step="5" value="55">
+        <span class="hint">Auto-set from level; adjust within your tolerance.</span>
+      </div>
+
+      <fieldset class="field">
+        <legend class="lbl"><span>Race-day temperature</span></legend>
+        <div class="chips cols-3" id="temp">
+          <label><input type="radio" name="temp" value="cool"><span class="ballot" aria-hidden="true"></span><span class="top">Cool</span><span class="meta">&lt; 12 °C</span></label>
+          <label><input type="radio" name="temp" value="mild" checked><span class="ballot" aria-hidden="true"></span><span class="top">Mild</span><span class="meta">12–20 °C</span></label>
+          <label><input type="radio" name="temp" value="hot"><span class="ballot" aria-hidden="true"></span><span class="top">Hot</span><span class="meta">&gt; 20 °C</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend class="lbl"><span>Sweat profile</span></legend>
+        <div class="chips cols-2" id="sweat">
+          <label><input type="radio" name="sweat" value="normal" checked><span class="ballot" aria-hidden="true"></span><span class="top">Average</span><span class="meta">No salt stains</span></label>
+          <label><input type="radio" name="sweat" value="salty"><span class="ballot" aria-hidden="true"></span><span class="top">Salty</span><span class="meta">Salt rings · cramps</span></label>
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label class="lbl" for="bottle"><span>Bottle / flask volume</span><span class="v-chip" id="lbl-bottle">500 ml</span></label>
+        <input type="number" id="bottle" min="100" max="1000" step="50" value="500">
+        <span class="hint">Handheld 500 ml &middot; soft flask 250 ml &middot; vest bottle 600 ml.</span>
+      </div>
+
+      <div class="field">
+        <label class="lbl" for="caffeine"><span>Caffeine plan</span></label>
+        <select id="caffeine">
+          <option value="none">None</option>
+          <option value="low" selected>Low — 3 mg/kg total</option>
+          <option value="mid">Moderate — 4.5 mg/kg total</option>
+          <option value="high">High — 6 mg/kg total</option>
+        </select>
+        <span class="hint">Half from a pre-race coffee, half from instant-coffee crystals in late bottles. 1 tsp instant ≈ 60 mg.</span>
+      </div>
+    </section>
+
+    <!-- OUTPUT -->
+    <section class="panel" id="outputs">
+      <div class="panel-head">
+        <h3>Your plan</h3>
+        <span class="label ref">Output · LIVE</span>
+      </div>
+
+      <div class="out-hero">
+        <div>
+          <div class="k">Carbohydrate target</div>
+          <div class="v"><span id="o-carbs">55</span></div>
+        </div>
+        <div class="side">
+          <div class="lab">Total / race</div>
+          <div class="total tab-nums" id="o-carbs-total">220 g over 4.00 h</div>
+        </div>
+      </div>
+
+      <div class="out-grid">
+        <div class="cell">
+          <div class="k">Fluid</div>
+          <div class="v tab-nums" id="o-fluid">—</div>
+          <div class="sub" id="o-fluid-total"></div>
+          <span class="fn">12</span>
+        </div>
+        <div class="cell">
+          <div class="k">Sodium</div>
+          <div class="v tab-nums" id="o-sodium">—</div>
+          <div class="sub" id="o-sodium-total"></div>
+          <span class="fn">11</span>
+        </div>
+        <div class="cell">
+          <div class="k">Drink strength</div>
+          <div class="v tab-nums" id="o-conc">—</div>
+          <div class="sub" id="o-conc-sub"></div>
+          <span class="fn">09</span>
+        </div>
+        <div class="cell">
+          <div class="k">Glu : Fru</div>
+          <div class="v tab-nums" id="o-ratio">—</div>
+          <div class="sub" id="o-ratio-sub"></div>
+          <span class="fn">03·04</span>
+        </div>
+        <div class="cell">
+          <div class="k">Bottles</div>
+          <div class="v tab-nums" id="o-bottles">—</div>
+          <div class="sub" id="o-bottles-sub"></div>
+        </div>
+        <div class="cell">
+          <div class="k">Caffeine</div>
+          <div class="v tab-nums" id="o-caff">—</div>
+          <div class="sub" id="o-caff-sub"></div>
+          <span class="fn">14</span>
+        </div>
+      </div>
+
+      <div class="recipe">
+        <div class="pre">Recipe / <span id="r-bottle-line">per bottle</span></div>
+        <h3 id="r-name">—</h3>
+        <p class="strategy" id="r-strategy"></p>
+        <table class="ing">
+          <thead>
+            <tr><th>Ingredient</th><th class="num">Per bottle</th><th class="num">Per liter</th><th class="num">Total race</th></tr>
+          </thead>
+          <tbody id="r-ing"></tbody>
+        </table>
+        <div class="notes" id="r-notes"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ STATEMENT ============ -->
+<section class="statement">
+  <div class="container">
+    <blockquote>Train the gut at <span class="hi">race intensity.</span></blockquote>
+    <cite>Jeukendrup · Sports Med 47 Suppl 1 · 2017</cite>
+  </div>
+</section>
+
+<!-- ============ II · GELS & SNACKS ============ -->
+<div class="container" id="gels">
+  <div class="section-head">
+    <span class="idx">02 / FUEL FORMATS</span>
+    <h2>Beyond the<br>bottle.</h2>
+    <span class="meta">DIY gels · real food · risks</span>
+  </div>
+</div>
+
+<section class="feature">
+  <div class="container">
+    <p class="lede">Drinks deliver carbs, fluid and sodium together — but the stomach has limits. When you need more grams than your bottle can carry without diluting hydration, gels and real food step in. Pfeiffer 2010 showed gels match drinks on oxidation at matched intake: <strong>form mostly affects palatability and GI tolerance, not absorption</strong>.</p>
+
+    <h3 class="sub"><span>DIY gel recipes</span><span class="small">~60 % carb · pantry only</span></h3>
+    <p>Target ~20–25 g carbs per ~30–40 g serving. Each recipe below makes 3–5 servings. Squeeze into a small soft flask or zip-lock corner. Honey- and maple-based gels are shelf-stable; date and rice-cake versions need refrigeration until race morning.</p>
+
+    <div class="rec-grid">
+      <article class="rec-card">
+        <span class="badge">Classic</span>
+        <h4>Honey-salt gel</h4>
+        <ul>
+          <li>Honey<span class="amt">100 g</span></li>
+          <li>Sea salt<span class="amt">0.5 g</span></li>
+          <li>Lemon juice<span class="amt">1 tsp</span></li>
+          <li>Instant coffee (optional)<span class="amt">½ tsp</span></li>
+        </ul>
+        <div class="yield">≈ 80 g carbs · 1:1 glu:fru · 4 × 25 g</div>
+      </article>
+      <article class="rec-card">
+        <span class="badge">Smooth</span>
+        <h4>Maple syrup gel</h4>
+        <ul>
+          <li>Pure maple syrup (Grade A)<span class="amt">100 g</span></li>
+          <li>Sea salt<span class="amt">0.5 g</span></li>
+          <li>Water (if thick)<span class="amt">5 ml</span></li>
+        </ul>
+        <div class="yield">≈ 67 g carbs · sucrose-heavy · 3 × 22 g</div>
+      </article>
+      <article class="rec-card">
+        <span class="badge">Whole food</span>
+        <h4>Date paste gel</h4>
+        <ul>
+          <li>Medjool dates (pitted)<span class="amt">4 · 70 g</span></li>
+          <li>Water<span class="amt">40–50 ml</span></li>
+          <li>Sea salt · cinnamon<span class="amt">pinch ea.</span></li>
+        </ul>
+        <div class="yield">≈ 50 g carbs · refrigerate · 2–3 × 22 g</div>
+      </article>
+      <article class="rec-card">
+        <span class="badge">High rate</span>
+        <h4>Rice-syrup + fructose</h4>
+        <ul>
+          <li>Brown rice syrup<span class="amt">80 g</span></li>
+          <li>Pure fructose powder<span class="amt">20 g</span></li>
+          <li>Sea salt<span class="amt">0.5 g</span></li>
+        </ul>
+        <div class="yield">≈ 80 g carbs · 1:0.8 glu:fru · gut-trained only</div>
+      </article>
+    </div>
+
+    <h3 class="sub"><span>Real-food snacks</span><span class="small">What survives race-day pace</span></h3>
+    <table class="specs">
+      <thead>
+        <tr><th>Snack</th><th class="num">Carbs</th><th>Best pace</th><th>Caveats</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="name">Allen Lim rice cake (50 g)</td><td class="num">25 g</td><td>4 h+ marathons · ultras</td><td>Recipe below. Easy on stomach, palate-cleansing.</td></tr>
+        <tr><td class="name">Medjool date (1 large, 24 g)</td><td class="num">16 g</td><td>30–45 min top-ups</td><td>High fructose — cap at 2–3 per hour.</td></tr>
+        <tr><td class="name">Banana, medium</td><td class="num">25 g</td><td>Aid-station grab</td><td>Some fiber; chew at walking pace.</td></tr>
+        <tr><td class="name">Gummy candy (10 pieces)</td><td class="num">25 g</td><td>Any pace</td><td>Sucrose + glucose syrup; fast and cheap.</td></tr>
+        <tr><td class="name">Pretzels (15 sticks)</td><td class="num">22 g + 400 mg Na</td><td>Slow-pace sodium top-up</td><td>Hard to chew while breathing hard.</td></tr>
+        <tr><td class="name">Boiled potato + salt</td><td class="num">20 g</td><td>Ultra crew pickup</td><td>Slow chew, but classic ultra fuel.</td></tr>
+        <tr><td class="name">White-bread + jam (½)</td><td class="num">25 g</td><td>4:30+ marathons</td><td>Fat in bread slows emptying; sparingly.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub"><span>Allen Lim rice cakes</span><span class="small">Skratch Labs · Feed Zone Portables 2013</span></h3>
+    <p>The gold standard for slower-paced endurance fueling — cooked sushi rice held together with egg, sweetened lightly, salted.</p>
+    <ul>
+      <li>1½ cups (~300 g cooked) short-grain white rice</li>
+      <li>2 eggs, lightly beaten</li>
+      <li>50 g cane sugar · ½ tsp sea salt · pinch cinnamon</li>
+      <li>Cook eggs &amp; sugar in a pan until soft scramble; fold in warm rice; press into a parchment-lined dish; chill 30 min; cut into 50 g squares; wrap in foil.</li>
+    </ul>
+    <p>Each square ≈ 25 g carbs + ~100 mg sodium. Survives a long-run pocket for 2–3 hours.</p>
+
+    <h3 class="sub"><span>How to use them</span><span class="small">Race-day execution</span></h3>
+    <ul>
+      <li><strong>Stack, don't swap.</strong> Use gels and snacks on top of your drink, not instead. Drink = fluid &amp; sodium base; gels = carb top-up.</li>
+      <li><strong>One gel ≈ 25 g carbs</strong>, every 25–45 min depending on hourly target.</li>
+      <li><strong>Always chase with water.</strong> Gels are ~60 % carb concentration — without 100–150 ml plain-water chase, gastric emptying stalls.</li>
+      <li><strong>Match form to pace.</strong> Faster than ~7 min/mi: liquids &amp; gels only. Slower than ~8 min/mi: real food is viable.</li>
+      <li><strong>Rehearse ≥ 4×.</strong> Costa &amp; Gaskell 2025 put gut-training and tested-fueling as the two most-evidenced GI mitigators.</li>
+    </ul>
+
+    <h3 class="sub"><span>Risks &amp; common mistakes</span><span class="small">Read before race week</span></h3>
+    <div class="notes">
+      <div class="note danger"><span class="tag">Fructose</span><p><strong>Fructose stacking.</strong> Your drink already has ~50 % fructose (from sucrose). Add a honey or date gel (also ~50 % fructose) and you can blow past the GLUT5 ceiling (~60 g/h fructose) — bloating, urgent diarrhea. Above 75 g/h total carbs, lean on rice-syrup or maltodextrin-based fuels for the extra grams.</p></div>
+      <div class="note danger"><span class="tag">Water chase</span><p><strong>Concentrated carbs without water.</strong> A gel is ~3× more concentrated than your drink. Without a 100–150 ml water chase, gastric emptying stalls. Always take the gel within one minute of an aid station.</p></div>
+      <div class="note warn"><span class="tag">Caffeine</span><p><strong>Caffeine accumulation.</strong> Many commercial gels carry 25–100 mg caffeine each. Stacked with in-bottle instant coffee + a pre-race espresso, you can hit 6 mg/kg by halfway. Above ~9 mg/kg gives no further benefit (Burke 2008). Track your total.</p></div>
+      <div class="note warn"><span class="tag">Fiber &amp; fat</span><p><strong>Hidden fiber + fat in "natural" snacks.</strong> Whole-grain bread, nut butter, granola bars — popular pantry picks, but the fiber + fat slows emptying. For a marathon, prefer refined-grain (white rice, white bread) and skip nut butters race-day.</p></div>
+      <div class="note ok"><span class="tag">Hydrogel</span><p><strong>Hydrogel is mostly marketing.</strong> Two independent RCTs (McCubbin 2020; Li 2026 review) found no improvement in glucose availability, CHO oxidation, GI symptoms, or performance vs concentration-matched controls. Maurten's edge is its composition (1:0.8 malto:fru at 16 %), not the alginate matrix. Reproducible with sucrose at 8–10 % + a water chase.</p></div>
+      <div class="note ok"><span class="tag">Rehearse</span><p><strong>Test in training, not on race day.</strong> Rehearse each gel recipe and snack at goal marathon pace at least 3–4 times during gut-training weeks 5–8.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ III · GUT TRAINING ============ -->
+<div class="container" id="gut">
+  <div class="section-head">
+    <span class="idx">03 / GUT TRAINING</span>
+    <h2>Six to ten<br>weeks out.</h2>
+    <span class="meta">Long runs · race pace · ramp</span>
+  </div>
+</div>
+
+<section class="feature">
+  <div class="container">
+    <p class="lede">The intestinal carbohydrate transporters — SGLT1 for glucose, GLUT5 for fructose — upregulate with repeated exposure during exercise. Start six to ten weeks before race day and ramp on long runs at goal pace.</p>
+
+    <table class="specs">
+      <thead>
+        <tr><th>Phase</th><th class="num">Long-run carb target</th><th class="num">Drink %</th><th>What to practice</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="phase">Weeks 1–2</td><td class="num">30 g/h</td><td class="num">6 %</td><td>Drink on time (every 15–20 min). Get used to swallowing while breathing hard.</td></tr>
+        <tr><td class="phase">Weeks 3–4</td><td class="num">45–60 g/h</td><td class="num">6–8 %</td><td>Add salt to taste. Practice grabbing the bottle without breaking pace.</td></tr>
+        <tr><td class="phase">Weeks 5–6</td><td class="num">60–75 g/h</td><td class="num">8 %</td><td>One long run at marathon pace with race-day breakfast.</td></tr>
+        <tr><td class="phase">Weeks 7–8</td><td class="num">75–90 g/h</td><td class="num">8–10 %</td><td>Full dress rehearsal: bottle, salt, coffee timing, exact recipe.</td></tr>
+        <tr><td class="phase">Weeks 9+</td><td class="num">90–100 g/h</td><td class="num">10–12 %</td><td>Concentrated flask + plain-water chase. Only if you tolerated weeks 7–8 cleanly.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notes">
+      <div class="note ok"><span class="tag">Rules</span><p><strong>Key rules.</strong> Train the gut at race intensity, not just easy runs. Always pair gut-training sessions with the planned race-day breakfast. Never introduce a new fuel in the last two weeks before race day.</p></div>
+      <div class="note warn"><span class="tag">GI distress</span><p><strong>If GI distress appears</strong> — bloating, cramping, nausea, urgent diarrhea — drop one phase back, hold for two weeks, then try again. Don't push through; concentrated carbs hitting a non-emptying stomach makes it worse.</p></div>
+      <div class="note ok"><span class="tag">Taper</span><p><strong>Race-week tapering.</strong> Three days out: low-fiber meals (no whole grains, salads, bran, beans). Carb-load to 8–10 g/kg/day. Day before: low-fat, mostly white rice / pasta / bread / potato.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ IV · BICARB ============ -->
+<div class="container" id="bicarb">
+  <div class="section-head">
+    <span class="idx">04 / BICARBONATE</span>
+    <h2>Optional<br>buffer.</h2>
+    <span class="meta">Practice or skip</span>
+  </div>
+</div>
+
+<section class="feature">
+  <div class="container">
+    <p class="lede">Plain baking soda buffers blood acidity and can squeeze a few percent of performance — strongest at higher relative intensities (5k–10k pace). For a marathon, the benefit is smaller and more individual; only worth it if you'll be running near 80 % V̇O₂max and have practiced it.</p>
+
+    <h3 class="sub"><span>Dose &amp; timing</span><span class="small">For <span id="b-mass">70</span> kg body mass</span></h3>
+    <table class="specs">
+      <thead>
+        <tr><th>Protocol</th><th class="num">Dose</th><th class="num">For you</th><th>When</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="phase">Conservative</td>
+          <td class="num">0.2 g/kg</td>
+          <td class="num" id="b-cons">14 g · ~2¾ tsp</td>
+          <td>Split: half 180 min pre-start, half 90 min pre-start, both <em>with</em> a carb-rich meal.</td>
+        </tr>
+        <tr>
+          <td class="phase">Standard</td>
+          <td class="num">0.3 g/kg</td>
+          <td class="num" id="b-std">21 g · ~4 tsp</td>
+          <td>Split: 3–4 portions every 30–40 min, finishing 60–90 min before start, each with food.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>1 level teaspoon of baking soda ≈ 5–6 g. Dissolve in ~250 ml water; chase each dose with another ~250 ml plain water and food (a bagel, banana, oats).</p>
+
+    <div class="notes">
+      <div class="note danger"><span class="tag">GI risk</span><p><strong>GI risk is real.</strong> Common: bloating, nausea, diarrhea, vomiting. Mitigate by (1) split-dosing, (2) taking with carb-rich food, (3) drinking plenty of water, (4) starting at 0.2 g/kg the first 2–3 times. <strong>Never race-day-debut bicarb.</strong> Practice it 3–5 times on long runs first.</p></div>
+      <div class="note warn"><span class="tag">Skip if</span><p><strong>Skip bicarb if</strong> you have high blood pressure, kidney issues, or a history of bicarb-induced GI distress that didn't resolve with practice. The extra sodium (~1100 mg per 3 g of baking soda) stacks on top of your in-race sodium plan — don't double up.</p></div>
+      <div class="note ok"><span class="tag">How</span><p><strong>How to take it.</strong> Mix the dose into water (it fizzes and tastes salty; lemon juice helps). Drink with your pre-race meal. Buffering peaks 90–180 min after the last dose, which is why split-loading 60–180 min pre-start works.</p></div>
+      <div class="note ok"><span class="tag">Context</span><p><strong>Marathon context.</strong> Bicarb's evidence base is strongest for 1–10 min all-out efforts; for the marathon, expect a smaller and more individual benefit. If your goal pace is conversational, the GI risk likely outweighs the gain — skip it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REFERENCES ============ -->
+<div class="container" id="references">
+  <div class="section-head">
+    <span class="idx">05 / SOURCES</span>
+    <h2>Every<br>number<br>cited.</h2>
+    <span class="meta">22 papers · open-access where available</span>
+  </div>
+</div>
+
+<section class="refs">
+  <div class="container">
+    <p class="preamble">Every claim above traces to a peer-reviewed paper or sports-governing-body consensus. PMC and journal links are open-access where available. A bash script in the repo (<span class="mono">references/fetch-references.sh</span>) downloads open-access PDFs locally.</p>
+
+    <h3>Carbohydrate intake &amp; oxidation</h3>
+    <ol>
+      <li><strong>Burke LM, Jeukendrup AE, Jones AM, Mooses M.</strong> Contemporary Nutrition Strategies to Optimize Performance in Distance Runners and Race Walkers. <em>Int J Sport Nutr Exerc Metab</em> 2019;29(2):117–129. PMID 30943841. <a href="https://journals.humankinetics.com/view/journals/ijsnem/29/2/article-p117.xml" target="_blank" rel="noopener">Journal</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/30943841/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Hearris MA et al.</strong> Multiple transportable carbohydrates ingested at 120 g·h⁻¹: drink, gel, chew, and mix formats. <em>J Appl Physiol</em> 2022;132(6):1394–1406. <a href="https://journals.physiology.org/doi/full/10.1152/japplphysiol.00091.2022" target="_blank" rel="noopener">Journal</a>.</li>
+      <li><strong>Jentjens RL, Jeukendrup AE.</strong> High rates of exogenous CHO oxidation from a mixture of glucose and fructose. <em>Br J Nutr</em> 2005;93(4):485–492. <a href="https://www.cambridge.org/core/journals/british-journal-of-nutrition/article/5978786559A73EDEFC6DCD272A773E3A" target="_blank" rel="noopener">Journal</a>.</li>
+      <li><strong>Trommelen J et al.</strong> Fructose &amp; sucrose intake increase exogenous CHO oxidation during exercise. <em>Nutrients</em> 2017;9(2):167. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5331598/" target="_blank" rel="noopener">PMC</a>.</li>
+      <li><strong>Jentjens RL, Achten J, Jeukendrup AE.</strong> High oxidation rates from combined carbohydrates ingested during exercise. <em>Metabolism</em> 2005;54(5):610–618. <a href="https://pubmed.ncbi.nlm.nih.gov/15877301/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Podlogar T, Wallis GA.</strong> New Horizons in CHO Research and Application for Endurance Athletes. <em>Sports Med</em> 2022;52(Suppl 1):5–23. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9734239/" target="_blank" rel="noopener">PMC</a>.</li>
+      <li><strong>Viribay A et al.</strong> Effects of 120 g/h CHO intake during a marathon on running performance and muscle damage. <em>Nutrients</em> 2020;12(5):1367. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7284742/" target="_blank" rel="noopener">PMC</a>.</li>
+      <li><strong>Podlogar T et al.</strong> Exogenous CHO oxidation at 90 vs 120 g/h. <em>Eur J Appl Physiol</em> 2022;122(11):2393–2401. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9560939/" target="_blank" rel="noopener">PMC</a>.</li>
+    </ol>
+
+    <h3>Gastric emptying &amp; gut training</h3>
+    <ol start="9">
+      <li><strong>Murray R et al.</strong> The effects of glucose, fructose, and sucrose ingestion during exercise. <em>Int J Sport Nutr</em> 1999;9(3):263–274. <a href="https://pubmed.ncbi.nlm.nih.gov/10477362/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Jeukendrup AE.</strong> Training the Gut for Athletes. <em>Sports Med</em> 2017;47(Suppl 1):101–110. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5371619/" target="_blank" rel="noopener">PMC</a>.</li>
+    </ol>
+
+    <h3>Hydration &amp; sodium</h3>
+    <ol start="11">
+      <li><strong>Lara B et al.</strong> Interindividual variability in sweat electrolyte concentration in marathoners. <em>Eur J Appl Physiol</em> 2016. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966593/" target="_blank" rel="noopener">PMC</a>.</li>
+      <li><strong>Sawka MN, Cheuvront SN, Kenefick RW.</strong> Hypohydration and Human Performance — ACSM. <em>Med Sci Sports Exerc</em> 2007/2015. <a href="https://pubmed.ncbi.nlm.nih.gov/17277604/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Hoffman MD, Stuempfle KJ.</strong> Sodium intake during an ultramarathon does not prevent muscle cramping, dehydration, or hyponatremia. <em>Sports Med</em> 2015. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4688305/" target="_blank" rel="noopener">PMC</a>.</li>
+    </ol>
+
+    <h3>Caffeine &amp; bicarbonate</h3>
+    <ol start="14">
+      <li><strong>Burke LM.</strong> Caffeine and sports performance. <em>Appl Physiol Nutr Metab</em> 2008;33(6):1319–1334. <a href="https://pubmed.ncbi.nlm.nih.gov/19088794/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Grgic J et al.</strong> ISSN exercise &amp; sports nutrition position stand: sodium bicarbonate. <em>J Int Soc Sports Nutr</em> 2021;18:61. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8427947/" target="_blank" rel="noopener">PMC</a>.</li>
+    </ol>
+
+    <h3>Gels, real food &amp; GI tolerance</h3>
+    <ol start="16">
+      <li><strong>Pfeiffer B et al.</strong> CHO oxidation from a CHO gel compared with a drink. <em>Med Sci Sports Exerc</em> 2010;42(11):2038–2045. <a href="https://pubmed.ncbi.nlm.nih.gov/20404763/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Pfeiffer B et al.</strong> Nutritional intake and GI problems during competitive endurance events. <em>Med Sci Sports Exerc</em> 2012;44(2):344–351. <a href="https://pubmed.ncbi.nlm.nih.gov/21775906/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>McCubbin AJ et al.</strong> Hydrogel CHO Beverage Does Not Improve Glucose Availability, Substrate Oxidation, GI Symptoms or Performance. <em>Int J Sport Nutr Exerc Metab</em> 2020;30(1):25–33. <a href="https://pubmed.ncbi.nlm.nih.gov/31629348/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Li P et al.</strong> Plant-derived alginate polysaccharide hydrogels in sport &amp; exercise nutrition. <em>Front Nutr</em> 2026. <a href="https://pubmed.ncbi.nlm.nih.gov/42039889/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Costa RJS et al.</strong> SDA &amp; USSF Joint Position Statement: Prevention &amp; Management of Exercise-Associated GI Perturbations. <em>Sports Med</em> 2025. <a href="https://pubmed.ncbi.nlm.nih.gov/40195264/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Costa RJS, Gaskell SK.</strong> Practitioner's Guide to Gut Issues in Athletes. <em>Int J Sports Med</em> 2026. <a href="https://pubmed.ncbi.nlm.nih.gov/42155582/" target="_blank" rel="noopener">PubMed</a>.</li>
+      <li><strong>Lim AL, Thomas BC.</strong> <em>Feed Zone Portables.</em> VeloPress 2013. ISBN 978-1937715007.</li>
+    </ol>
+
+    <h3>Commercial reference</h3>
+    <ol start="23">
+      <li><strong>Maurten Drink Mix 320</strong> — 80 g carbs per 500 ml = 16 % w/v; maltodextrin, fructose, sodium alginate, pectin, salt, sodium bicarbonate. <a href="https://www.maurten.com/products/drink-mix-320-box-us" target="_blank" rel="noopener">Maurten product page</a>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="container inner">
+    <div class="col">
+      <div class="brand-foot">MF<span class="slash">/</span>01</div>
+      <div class="meta">Marathon Fuel · v1<br>Engineered in a kitchen · Open-source<br>No ads · No accounts</div>
+    </div>
+    <div class="col">
+      <h4>Sections</h4>
+      <ul>
+        <li><a href="#calculator">01 / Calculator</a></li>
+        <li><a href="#gels">02 / Gels &amp; Snacks</a></li>
+        <li><a href="#gut">03 / Gut Training</a></li>
+        <li><a href="#bicarb">04 / Bicarbonate</a></li>
+        <li><a href="#references">05 / Sources</a></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4>Colophon</h4>
+      <div class="meta">
+        Set in Hanken Grotesk &amp; JetBrains Mono.<br>
+        Built with vanilla HTML/CSS/JS.<br>
+        Edition CXXVI.
+      </div>
+    </div>
+  </div>
 </footer>
 
 <script>
 (function () {
   "use strict";
 
-  // ---------- helpers ----------
   function $(id) { return document.getElementById(id); }
   function getRadio(name) {
     const el = document.querySelector('input[name="' + name + '"]:checked');
@@ -1205,39 +1759,29 @@
   }
   function round(n, step) { return Math.round(n / step) * step; }
 
-  // setText: write a new value and flash the element if the value changed.
-  // Lets the UI feel alive without animating every irrelevant render.
   function setText(el, newText) {
     if (!el) return;
     if (el.textContent === newText) return;
     el.textContent = newText;
     el.classList.remove("flash");
-    void el.offsetWidth; // restart animation
+    void el.offsetWidth;
     el.classList.add("flash");
   }
 
-  // ---------- constants ----------
   const LEVELS = {
-    beginner:     { carbs: 30,  range: [25, 35],   maxConc: 6,  recipe: "A" },
-    recreational: { carbs: 55,  range: [45, 60],   maxConc: 8,  recipe: "A-B" },
-    subelite:     { carbs: 75,  range: [60, 90],   maxConc: 10, recipe: "B" },
-    elite:        { carbs: 105, range: [90, 120],  maxConc: 18, recipe: "C" },
+    beginner:     { carbs: 30,  range: [25, 35] },
+    recreational: { carbs: 55,  range: [45, 60] },
+    subelite:     { carbs: 75,  range: [60, 90] },
+    elite:        { carbs: 105, range: [90, 120] },
   };
-
-  // ml/kg/h scaled by temperature. Hot tier raised to 12 to better match
-  // Sawka/Cheuvront marathon sweat-rate data (0.5–1.5 L/h common above 20 °C).
   const FLUID_PER_KG = { cool: 6, mild: 8, hot: 12 };
-
-  // sodium mg/h by temperature × sweat-rate
   const SODIUM = {
-    cool:  { normal: 350, salty: 500 },
-    mild:  { normal: 550, salty: 750 },
-    hot:   { normal: 800, salty: 1000 },
+    cool: { normal: 350, salty: 500 },
+    mild: { normal: 550, salty: 750 },
+    hot:  { normal: 800, salty: 1000 },
   };
-
   const CAFFEINE = { none: 0, low: 3, mid: 4.5, high: 6 };
 
-  // selected chip styling
   function syncRadioStyles() {
     document.querySelectorAll(".chips label").forEach(function (lbl) {
       const input = lbl.querySelector("input");
@@ -1245,28 +1789,23 @@
       else lbl.classList.remove("selected");
     });
   }
-
-  // ---------- recipe selection ----------
-  function pickConcentration(carbsPerHour) {
-    if (carbsPerHour <= 45) return 6;
-    if (carbsPerHour <= 70) return 8;
-    if (carbsPerHour <= 90) return 10;
+  function pickConcentration(c) {
+    if (c <= 45) return 6;
+    if (c <= 70) return 8;
+    if (c <= 90) return 10;
     return 12;
   }
 
-  // ---------- main compute ----------
   function compute() {
     const mass = Math.max(35, Math.min(150, parseFloat($("mass").value) || 70));
     const hours = Math.max(0, parseFloat($("hours").value) || 0);
     const minutes = Math.max(0, Math.min(59, parseFloat($("minutes").value) || 0));
     const raceHours = hours + minutes / 60;
-
     const level = getRadio("level") || "recreational";
     const temp = getRadio("temp") || "mild";
     const sweat = getRadio("sweat") || "normal";
     const bottleMl = Math.max(100, Math.min(1500, parseFloat($("bottle").value) || 500));
     const caffeineKey = $("caffeine").value;
-
     const carbsPerHour = Math.max(15, Math.min(150, parseFloat($("carbs").value) || LEVELS[level].carbs));
 
     const fluidPerHour = FLUID_PER_KG[temp] * mass;
@@ -1278,13 +1817,11 @@
     const concPct = pickConcentration(carbsPerHour);
     const drinkMlTotal = totalCarbs / (concPct / 100);
     const extraWaterMl = Math.max(0, totalFluidTarget - drinkMlTotal);
-
     const bottleCount = Math.max(1, Math.ceil(drinkMlTotal / bottleMl));
     const actualBottleMl = drinkMlTotal / bottleCount;
 
     const sucroseTotal = totalCarbs;
     const dextroseTotal = 0;
-    const dShare = 0;
 
     const SALT_CAP_PER_L = 2.5;
     let saltPerL = (totalSodium / 400) / (drinkMlTotal / 1000);
@@ -1302,9 +1839,7 @@
     const glucoseTotal = sucroseTotal * 0.5 + dextroseTotal;
     const fructoseTotal = sucroseTotal * 0.5;
     const ratioG = glucoseTotal / Math.max(0.0001, fructoseTotal);
-
-    const caffeineMgPerKg = CAFFEINE[caffeineKey];
-    const caffeineTotal = caffeineMgPerKg * mass;
+    const caffeineTotal = CAFFEINE[caffeineKey] * mass;
 
     return {
       mass, raceHours, level, temp, sweat, bottleMl, caffeineKey,
@@ -1312,19 +1847,17 @@
       totalCarbs, totalFluidTarget, totalSodium,
       concPct, drinkMlTotal, extraWaterMl,
       bottleCount, actualBottleMl,
-      sucroseTotal, dextroseTotal, dShare,
+      sucroseTotal, dextroseTotal,
       saltPerL, saltTotalG, saltCapsuleMg, saltCapped,
       glucoseTotal, fructoseTotal, ratioG,
       caffeineTotal,
     };
   }
 
-  // ---------- render ----------
   function render() {
     syncRadioStyles();
     const r = compute();
 
-    // input chips (live value summaries)
     setText($("lbl-mass"), fmt(r.mass) + " kg");
     const h = Math.floor(r.raceHours);
     const m = Math.round((r.raceHours - h) * 60);
@@ -1332,8 +1865,7 @@
     setText($("lbl-carbs"), fmt(r.carbsPerHour) + " g/h");
     setText($("lbl-bottle"), fmt(r.bottleMl) + " ml");
 
-    // top stats — setText flashes only when the value actually changes
-    setText($("o-carbs"), fmt(r.carbsPerHour) + " g/h");
+    setText($("o-carbs"), fmt(r.carbsPerHour));
     $("o-carbs-total").textContent = fmt(r.totalCarbs) + " g over " + fmt(r.raceHours, 2) + " h";
 
     setText($("o-fluid"), fmt(round(r.fluidPerHour, 25)) + " ml/h");
@@ -1345,21 +1877,19 @@
       (r.saltCapsuleMg > 0 ? " (+" + fmt(round(r.saltCapsuleMg, 50)) + " mg capsule)" : "");
 
     setText($("o-conc"), r.concPct + " %");
-    let concSub = "";
-    if (r.concPct <= 8) concSub = "Isotonic-ish, fast emptying";
-    else if (r.concPct <= 10) concSub = "Just above isotonic — train your gut";
-    else if (r.concPct <= 14) concSub = "Concentrated — chase with water";
-    else concSub = "High flask — sip + chase";
+    let concSub;
+    if (r.concPct <= 8) concSub = "Isotonic-ish · fast emptying";
+    else if (r.concPct <= 10) concSub = "Above isotonic · train the gut";
+    else if (r.concPct <= 14) concSub = "Concentrated · chase with water";
+    else concSub = "High flask · sip + chase";
     $("o-conc-sub").textContent = concSub;
 
-    const ratioStr = r.fructoseTotal > 0
-      ? (r.ratioG.toFixed(2) + " : 1")
-      : "all glucose";
+    const ratioStr = r.fructoseTotal > 0 ? (r.ratioG.toFixed(2) + " : 1") : "all glucose";
     setText($("o-ratio"), ratioStr);
     let ratioSub;
     if (r.fructoseTotal === 0) ratioSub = "—";
-    else if (r.ratioG <= 1.2) ratioSub = "Maurten-like (1:1)";
-    else if (r.ratioG <= 1.7) ratioSub = "Classic 1.5:1";
+    else if (r.ratioG <= 1.2) ratioSub = "Maurten-like";
+    else if (r.ratioG <= 1.7) ratioSub = "Classic 1.5 : 1";
     else ratioSub = "Glucose-heavy";
     $("o-ratio-sub").textContent = ratioSub;
 
@@ -1376,82 +1906,81 @@
       $("o-caff-sub").textContent = "No caffeine planned";
     }
 
-    // recipe header
     let recipeName, strategy;
     if (r.concPct <= 6) {
-      recipeName = "Simple 6 % isotonic — sugar + salt";
+      recipeName = "MF-A · 6 % Isotonic";
       strategy = "Drink the mix throughout. Fast gastric emptying. Sucrose alone gives a natural 1:1 glucose:fructose ratio in the gut.";
     } else if (r.concPct <= 8) {
-      recipeName = "Simple 8 % — sugar + salt";
+      recipeName = "MF-B · 8 % Sucrose + Salt";
       strategy = "Top of the fast-emptying zone. Still pure household sugar — the 50:50 split of sucrose into glucose + fructose covers two intestinal transporters.";
     } else if (r.concPct <= 10) {
-      recipeName = "Concentrated 10 % — sugar + salt + water chase";
-      strategy = "Sip the bottle and chase 100–150 ml plain water from aid stations every ~20 min to keep gastric emptying fast.";
+      recipeName = "MF-C · 10 % Concentrated";
+      strategy = "Sip the bottle; chase 100–150 ml plain water from aid stations every ~20 min to keep gastric emptying fast.";
     } else {
-      recipeName = "Concentrated 12 % flask — sugar + salt + water chase";
+      recipeName = "MF-D · 12 % Flask + Water";
       strategy = "Carry concentrated flask(s); sip ~25–30 % every 20–25 min and chase with 100–150 ml plain water from aid stations. Requires gut training.";
     }
     $("r-name").textContent = recipeName;
     $("r-strategy").textContent = strategy;
+    $("r-bottle-line").textContent = r.bottleCount + " × " + fmt(round(r.actualBottleMl, 25)) + " ml bottles";
 
-    const perBottle = function (totalGrams) { return totalGrams / r.bottleCount; };
-    const perLiter = function (totalGrams) { return totalGrams / (r.drinkMlTotal / 1000); };
+    const perBottle = function (g) { return g / r.bottleCount; };
+    const perLiter = function (g) { return g / (r.drinkMlTotal / 1000); };
 
     const rows = [];
     rows.push({
-      name: "💧 Water",
+      name: "Water",
       perBottle: fmt(round(r.actualBottleMl, 25)) + " ml",
-      perLiter: "1000 ml",
+      perLiter: "1 000 ml",
       total: fmt(round(r.drinkMlTotal, 50)) + " ml",
     });
     rows.push({
-      name: "🍬 Sucrose (cane / beet sugar)",
+      name: "Sucrose · cane or beet sugar",
       perBottle: fmt(perBottle(r.sucroseTotal), 1) + " g",
       perLiter: fmt(perLiter(r.sucroseTotal), 1) + " g",
       total: fmt(r.sucroseTotal, 0) + " g",
     });
     if (r.dextroseTotal > 0.5) {
       rows.push({
-        name: "Dextrose (pure glucose powder)",
+        name: "Dextrose · pure glucose",
         perBottle: fmt(perBottle(r.dextroseTotal), 1) + " g",
         perLiter: fmt(perLiter(r.dextroseTotal), 1) + " g",
         total: fmt(r.dextroseTotal, 0) + " g",
       });
     }
     rows.push({
-      name: "🧂 Salt (table or sea salt)",
+      name: "Salt · table or sea salt",
       perBottle: fmt(perBottle(r.saltTotalG), 2) + " g",
       perLiter: fmt(r.saltPerL, 2) + " g",
       total: fmt(r.saltTotalG, 1) + " g",
     });
     rows.push({
-      name: "🍋 Lemon juice (optional, for flavor)",
-      perBottle: "~5 ml (1 tsp)",
-      perLiter: "~15 ml (1 tbsp)",
+      name: "Lemon juice · optional",
+      perBottle: "~5 ml",
+      perLiter: "~15 ml",
       total: "to taste",
     });
     if (r.caffeineTotal > 0) {
       const inRaceCaff = r.caffeineTotal * 0.5;
       const tspPerBottle = (inRaceCaff / r.bottleCount) / 60;
       rows.push({
-        name: "☕ Instant coffee (in-bottle)",
-        perBottle: fmt(tspPerBottle, 1) + " tsp (~" + fmt(inRaceCaff / r.bottleCount, 0) + " mg)",
+        name: "Instant coffee · in-bottle",
+        perBottle: fmt(tspPerBottle, 1) + " tsp · ~" + fmt(inRaceCaff / r.bottleCount, 0) + " mg",
         perLiter: "—",
-        total: fmt(inRaceCaff, 0) + " mg (other half = pre-race coffee)",
+        total: fmt(inRaceCaff, 0) + " mg",
       });
     }
     if (r.extraWaterMl > 25) {
       rows.push({
-        name: "🚰 Plain water from aid stations",
+        name: "Plain water · aid stations",
         perBottle: "—",
         perLiter: "—",
         total: fmt(round(r.extraWaterMl, 50)) + " ml",
       });
     }
 
-    const tbody = $("r-ing");
-    tbody.innerHTML = rows.map(function (row) {
-      return "<tr><td>" + row.name + "</td>" +
+    $("r-ing").innerHTML = rows.map(function (row) {
+      return "<tr><td class=\"name\">" + row.name + "</td>" +
              "<td class=\"num\">" + row.perBottle + "</td>" +
              "<td class=\"num\">" + row.perLiter + "</td>" +
              "<td class=\"num\">" + row.total + "</td></tr>";
@@ -1460,105 +1989,82 @@
     const notes = [];
     const levelDef = LEVELS[r.level];
     if (r.carbsPerHour < levelDef.range[0] || r.carbsPerHour > levelDef.range[1]) {
-      notes.push({
-        cls: "warn",
-        text: "Your hourly carb target (" + r.carbsPerHour + " g/h) is outside the typical " +
-              levelDef.range[0] + "–" + levelDef.range[1] + " g/h band for " + r.level +
-              " runners. Make sure you've gut-trained to this rate."
-      });
+      notes.push({ cls: "warn", tag: "Band", text:
+        "Your hourly carb target (" + r.carbsPerHour + " g/h) is outside the typical " +
+        levelDef.range[0] + "–" + levelDef.range[1] + " g/h band for " + r.level +
+        " runners. Make sure you've gut-trained to this rate." });
     }
     if (r.carbsPerHour >= 90) {
-      notes.push({
-        cls: "warn",
-        text: "At ≥ 90 g/h you're approaching the fructose-absorption ceiling. Sucrose already gives you the 1:1 glucose:fructose split you need, but only gut-trained athletes tolerate this rate. Rehearse the exact recipe at race pace ≥ 4–6 times before the marathon."
-      });
+      notes.push({ cls: "warn", tag: "Ceiling", text:
+        "At ≥ 90 g/h you're approaching the fructose-absorption ceiling. Rehearse the exact recipe at race pace ≥ 4–6 times before the marathon." });
     }
     if (r.carbsPerHour >= 105) {
-      notes.push({
-        cls: "warn",
-        text: "Above ~100 g/h, the 1:1 ratio from sucrose alone reaches GLUT5 saturation. To push higher you'd need to add pure fructose powder (not a pantry item) — keep sucrose-only intake ≤ ~100 g/h."
-      });
+      notes.push({ cls: "warn", tag: "GLUT5", text:
+        "Above ~100 g/h, the 1:1 ratio from sucrose alone reaches GLUT5 saturation. Push higher with pure fructose powder — keep sucrose-only intake ≤ ~100 g/h." });
     }
     if (r.concPct > 10) {
-      notes.push({
-        cls: "warn",
-        text: "Concentration is " + r.concPct + " % — drink plain water alongside (from aid stations) to prevent slow gastric emptying. Maurten's hydrogel masks this; a homemade drink does not."
-      });
+      notes.push({ cls: "warn", tag: "Strength", text:
+        "Concentration is " + r.concPct + " % — drink plain water alongside (from aid stations). Maurten's hydrogel masks this; homemade does not." });
     }
     if (r.saltCapped) {
-      notes.push({
-        cls: "warn",
-        text: "Your sodium target would require > 2.5 g salt/L (unpalatable). Capped at 2.5 g/L; carry a salt capsule providing ~" +
-              fmt(round(r.saltCapsuleMg, 50)) + " mg sodium for the rest."
-      });
+      notes.push({ cls: "warn", tag: "Salt cap", text:
+        "Sodium target would exceed 2.5 g salt/L (unpalatable). Capped at 2.5 g/L; carry a salt capsule providing ~" +
+        fmt(round(r.saltCapsuleMg, 50)) + " mg sodium." });
     }
     if (r.extraWaterMl > 25) {
-      notes.push({
-        cls: "ok",
-        text: "Plan to drink ~" + fmt(round(r.extraWaterMl, 50)) + " ml of plain water from aid stations over the race (≈" +
-              fmt(round(r.extraWaterMl / r.raceHours, 25)) + " ml/h) to meet fluid needs."
-      });
+      notes.push({ cls: "ok", tag: "Water", text:
+        "Drink ~" + fmt(round(r.extraWaterMl, 50)) + " ml plain water from aid stations (~" +
+        fmt(round(r.extraWaterMl / r.raceHours, 25)) + " ml/h) to meet fluid needs." });
     }
     if (r.caffeineTotal > 0) {
-      notes.push({
-        cls: "ok",
-        text: "Caffeine total " + fmt(r.caffeineTotal) + " mg (" + CAFFEINE[r.caffeineKey] +
-              " mg/kg). Suggested split: ~" + fmt(r.caffeineTotal * 0.5) +
-              " mg ~45 min pre-start, ~" + fmt(r.caffeineTotal * 0.5) + " mg spread across bottles from ~1:30 into the race."
-      });
+      notes.push({ cls: "ok", tag: "Caffeine", text:
+        "Total " + fmt(r.caffeineTotal) + " mg (" + CAFFEINE[r.caffeineKey] +
+        " mg/kg). Split: ~" + fmt(r.caffeineTotal * 0.5) +
+        " mg ~45 min pre-start, ~" + fmt(r.caffeineTotal * 0.5) + " mg across bottles from ~1:30 into the race." });
     }
-    notes.push({
-      cls: "ok",
-      text: "Glucose " + fmt(r.glucoseTotal) + " g + fructose " + fmt(r.fructoseTotal) +
-            " g across the race (ratio " + ratioStr + ")."
-    });
-    notes.push({
-      cls: "danger",
-      text: "Never race a new fueling strategy. Practice this exact recipe + concentration at goal pace before the marathon."
-    });
+    notes.push({ cls: "ok", tag: "Sugars", text:
+      "Glucose " + fmt(r.glucoseTotal) + " g + fructose " + fmt(r.fructoseTotal) +
+      " g across the race (ratio " + ratioStr + ")." });
+    notes.push({ cls: "danger", tag: "RULE 01", text:
+      "Never race a new fueling strategy. Practice this exact recipe and concentration at goal pace before the marathon." });
 
     $("r-notes").innerHTML = notes.map(function (n) {
-      return "<div class=\"note " + n.cls + "\">" + n.text + "</div>";
+      return '<div class="note ' + n.cls + '"><span class="tag">' + n.tag + '</span><p>' + n.text + '</p></div>';
     }).join("");
 
-    // bicarb dose figures (scale with body mass)
     const consG = r.mass * 0.2;
     const stdG = r.mass * 0.3;
     $("b-mass").textContent = fmt(r.mass);
-    $("b-cons").textContent = fmt(consG, 0) + " g (~" + (consG / 5).toFixed(1) + " tsp)";
-    $("b-std").textContent = fmt(stdG, 0) + " g (~" + (stdG / 5).toFixed(1) + " tsp)";
-  }
-
-  // ---------- wiring ----------
-  // Open a collapsible smoothly without yanking scroll position.
-  function nudgeOpen(id) {
-    const el = $(id);
-    if (el && !el.open) el.open = true;
-  }
-
-  // Level-driven adaptation: when the user picks a level, the most relevant
-  // deep-dive opens automatically so the page rearranges around their need.
-  function adaptForLevel(key) {
-    if (key === "beginner" || key === "recreational") {
-      nudgeOpen("gut");
-    } else if (key === "subelite") {
-      nudgeOpen("gels");
-    } else if (key === "elite") {
-      nudgeOpen("gels");
-      nudgeOpen("bicarb");
-    }
+    $("b-cons").textContent = fmt(consG, 0) + " g · ~" + (consG / 5).toFixed(1) + " tsp";
+    $("b-std").textContent = fmt(stdG, 0) + " g · ~" + (stdG / 5).toFixed(1) + " tsp";
   }
 
   document.querySelectorAll('input[name="level"]').forEach(function (el) {
     el.addEventListener("change", function () {
-      const key = el.value;
-      $("carbs").value = LEVELS[key].carbs;
-      adaptForLevel(key);
+      $("carbs").value = LEVELS[el.value].carbs;
       render();
     });
   });
 
-  ["mass", "hours", "minutes", "carbs", "bottle"].forEach(function (id) {
+  // Sync the time slider (in minutes) into the hidden hours/minutes
+  // inputs that compute() reads — keeps the original math intact.
+  function syncTime() {
+    const tm = parseInt($("time-min").value, 10);
+    const h = Math.floor(tm / 60);
+    const m = tm % 60;
+    $("hours").value = h;
+    $("minutes").value = m;
+    $("d-time").textContent = h + ":" + (m < 10 ? "0" + m : m);
+  }
+  function syncMass() {
+    $("d-mass").textContent = $("mass").value;
+  }
+  $("time-min").addEventListener("input", function () { syncTime(); render(); });
+  $("mass").addEventListener("input", function () { syncMass(); render(); });
+  syncTime();
+  syncMass();
+
+  ["carbs", "bottle"].forEach(function (id) {
     const el = $(id);
     if (!el) return;
     el.addEventListener("input", render);
@@ -1570,7 +2076,6 @@
     caff.addEventListener("change", render);
     caff.addEventListener("input", render);
   })();
-
   ["temp", "sweat"].forEach(function (name) {
     document.querySelectorAll('input[name="' + name + '"]').forEach(function (el) {
       el.addEventListener("change", render);
