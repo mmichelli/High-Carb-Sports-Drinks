@@ -23,26 +23,33 @@ if ! command -v magick >/dev/null 2>&1; then
 fi
 
 # --- version tag ------------------------------------------------------------
+# Prefer an exact-match git tag on HEAD (e.g. v1.0.0); fall back to short
+# commit sha; fall back to date when run outside git.
 if [[ -d .git ]] && command -v git >/dev/null 2>&1; then
-  VERSION="$(git rev-parse --short HEAD 2>/dev/null || echo "unversioned")"
+  VERSION="$(git describe --tags --exact-match HEAD 2>/dev/null \
+              || git rev-parse --short HEAD 2>/dev/null \
+              || echo "unversioned")"
 else
   VERSION="$(date -u +%Y%m%d)"
 fi
 DIST_DIR="dist"
 ZIP_NAME="marathon-fuel-${VERSION}.zip"
 
+# Strip metadata + zero PNG timestamps so the build is reproducible.
+PNG_REPRO=(-define png:exclude-chunks=date,time -strip)
+
 echo "==> Building marathon-fuel ${VERSION}"
 
 # --- regenerate raster favicons from favicon.svg ----------------------------
 echo "==> Rasterising favicons from favicon.svg"
-magick -background none -density 384 favicon.svg -resize 16x16  favicon-16.png
-magick -background none -density 384 favicon.svg -resize 32x32  favicon-32.png
-magick -background none -density 384 favicon.svg -resize 180x180 apple-touch-icon.png
+magick -background none -density 384 favicon.svg -resize 16x16  "${PNG_REPRO[@]}" favicon-16.png
+magick -background none -density 384 favicon.svg -resize 32x32  "${PNG_REPRO[@]}" favicon-32.png
+magick -background none -density 384 favicon.svg -resize 180x180 "${PNG_REPRO[@]}" apple-touch-icon.png
 magick favicon-16.png favicon-32.png favicon.ico
 
 # --- regenerate OG image from og-image.svg ----------------------------------
 echo "==> Rasterising og-image.png from og-image.svg"
-magick -background "#f4f4f0" -density 200 og-image.svg -resize 1200x630 og-image.png
+magick -background "#f4f4f0" -density 200 og-image.svg -resize 1200x630 "${PNG_REPRO[@]}" og-image.png
 
 # --- assemble dist ----------------------------------------------------------
 echo "==> Assembling ./${DIST_DIR}"
