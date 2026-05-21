@@ -223,6 +223,9 @@
   /* ---------- fields ---------- */
   .field { margin-bottom: 18px; }
   .field:last-child { margin-bottom: 0; }
+  fieldset.field { border: 0; padding: 0; margin: 0 0 18px; min-width: 0; }
+  fieldset.field:last-child { margin-bottom: 0; }
+  legend.lbl { padding: 0; width: 100%; }
   .field .lbl {
     display: flex;
     align-items: baseline;
@@ -291,6 +294,11 @@
     border-color: #d8d2cc;
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
+  }
+  .chips label:focus-within {
+    outline: 3px solid rgba(255,94,58,.45);
+    outline-offset: 2px;
+    border-color: var(--accent);
   }
   .chips input { position: absolute; opacity: 0; pointer-events: none; }
   .chips label .top {
@@ -616,6 +624,89 @@
   }
   details.extra .body a:hover { color: var(--accent-2); border-bottom-color: var(--accent-2); }
 
+  /* ---------- adaptive realtime ---------- */
+  @keyframes pulse-glow {
+    0%   { transform: scale(1);    text-shadow: 0 0 0 rgba(255,94,58,0); }
+    35%  { transform: scale(1.08); text-shadow: 0 0 22px rgba(255,94,58,.55); }
+    100% { transform: scale(1);    text-shadow: 0 0 0 rgba(255,94,58,0); }
+  }
+  @keyframes pulse-glow-light {
+    0%   { transform: scale(1);    text-shadow: 0 0 0 rgba(255,255,255,0); }
+    35%  { transform: scale(1.05); text-shadow: 0 0 22px rgba(255,255,255,.6); }
+    100% { transform: scale(1);    text-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+  .stat .v { transition: color .15s; }
+  .stat .v.flash { animation: pulse-glow .55s ease; }
+  .stat.hero .v.flash { animation: pulse-glow-light .55s ease; }
+  .v-chip { transition: background .15s, color .15s, transform .15s; }
+  .v-chip.flash {
+    background: var(--accent);
+    color: #fff;
+    transform: scale(1.06);
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ok);
+    display: inline-block;
+    margin-right: 4px;
+    animation: live-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes live-blink {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(15,138,90,.5); }
+    50%      { opacity: .7; box-shadow: 0 0 0 6px rgba(15,138,90,0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot, .stat .v, .v-chip, .chips label, .chev { animation: none !important; transition: none !important; }
+    .stat .v.flash, .v-chip.flash { transform: none !important; text-shadow: none !important; }
+    .chips label:hover { transform: none; }
+  }
+
+  /* ---------- gels & snacks ---------- */
+  .gel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 10px;
+    margin: 10px 0 14px;
+  }
+  @media (max-width: 640px) { .gel-grid { grid-template-columns: 1fr; } }
+  .gel-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    background: linear-gradient(180deg,#fff 0%,#fffaf6 100%);
+  }
+  .gel-card h4 {
+    margin: 0 0 4px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .gel-card .tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .gel-card .recipe-list {
+    margin: 6px 0 6px;
+    padding-left: 18px;
+    font-size: 0.86rem;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .gel-card .recipe-list li { margin-bottom: 2px; }
+  .gel-card .yield {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
   /* ---------- footer ---------- */
   footer {
     max-width: 1180px;
@@ -644,14 +735,15 @@
   <span class="brand"><span class="dot">🏃</span> Marathon Fuel</span>
   <nav class="nav-pills">
     <a href="#calculator">Calculator</a>
-    <a href="#gut">Train your gut</a>
+    <a href="#gut">Gut training</a>
+    <a href="#gels">Gels &amp; snacks</a>
     <a href="#bicarb">Bicarb</a>
     <a href="#references">References</a>
   </nav>
 </div>
 
 <header class="hero">
-  <span class="eyebrow"><span class="blip"></span> Made for race day · Backed by 15+ studies</span>
+  <span class="eyebrow"><span class="live-dot" aria-hidden="true"></span> Live calculator · Backed by 20+ peer-reviewed studies</span>
   <h1 class="title display">
     Mix a <span class="grad">high-carb sports drink</span><br>
     from your kitchen.
@@ -670,60 +762,60 @@
     <h2 class="card-title"><span class="ico-square">⚙</span> Your race</h2>
 
     <div class="field">
-      <div class="lbl"><span><span class="ico">⚖️</span>Body mass</span><span class="v-chip" id="lbl-mass">70 kg</span></div>
+      <label class="lbl" for="mass"><span><span class="ico" aria-hidden="true">⚖️</span>Body mass</span><span class="v-chip" id="lbl-mass">70 kg</span></label>
       <input type="number" id="mass" min="35" max="150" step="1" value="70">
     </div>
 
-    <div class="field">
-      <div class="lbl"><span><span class="ico">⏱</span>Goal finish time</span><span class="v-chip" id="lbl-time">4:00</span></div>
+    <fieldset class="field">
+      <legend class="lbl"><span><span class="ico" aria-hidden="true">⏱</span>Goal finish time</span><span class="v-chip" id="lbl-time">4:00</span></legend>
       <div class="row">
         <input type="number" id="hours" min="2" max="7" step="1" value="4" aria-label="Hours">
         <input type="number" id="minutes" min="0" max="59" step="1" value="0" aria-label="Minutes">
       </div>
       <span class="hint">Hours and minutes</span>
-    </div>
+    </fieldset>
 
-    <div class="field">
-      <div class="lbl"><span><span class="ico">🏁</span>Experience &amp; gut tolerance</span></div>
+    <fieldset class="field">
+      <legend class="lbl"><span><span class="ico" aria-hidden="true">🏁</span>Experience &amp; gut tolerance</span></legend>
       <div class="chips" id="level">
         <label><input type="radio" name="level" value="beginner"><span class="top"><span class="ico">🌱</span>Beginner</span><span class="meta">First marathon or &gt; 4:30 · ~30 g/h</span></label>
         <label><input type="radio" name="level" value="recreational" checked><span class="top"><span class="ico">🏃</span>Recreational</span><span class="meta">3:45–4:30 · 45–60 g/h</span></label>
         <label><input type="radio" name="level" value="subelite"><span class="top"><span class="ico">🚀</span>Sub-elite</span><span class="meta">3:00–3:45 · 60–90 g/h</span></label>
         <label><input type="radio" name="level" value="elite"><span class="top"><span class="ico">⚡</span>Elite</span><span class="meta">Sub-3:00, gut-trained · 90–120 g/h</span></label>
       </div>
-    </div>
+    </fieldset>
 
     <div class="field">
-      <div class="lbl"><span><span class="ico">🍬</span>Hourly carb target</span><span class="v-chip" id="lbl-carbs">55 g/h</span></div>
+      <label class="lbl" for="carbs"><span><span class="ico" aria-hidden="true">🍬</span>Hourly carb target</span><span class="v-chip" id="lbl-carbs">55 g/h</span></label>
       <input type="number" id="carbs" min="20" max="130" step="5" value="55">
       <span class="hint">Auto-set from your level — adjust within your tolerance.</span>
     </div>
 
-    <div class="field">
-      <div class="lbl"><span><span class="ico">🌡</span>Race-day temperature</span></div>
+    <fieldset class="field">
+      <legend class="lbl"><span><span class="ico" aria-hidden="true">🌡</span>Race-day temperature</span></legend>
       <div class="chips cols-3" id="temp">
         <label><input type="radio" name="temp" value="cool"><span class="top"><span class="ico">❄️</span>Cool</span><span class="meta">&lt; 12 °C</span></label>
         <label><input type="radio" name="temp" value="mild" checked><span class="top"><span class="ico">🌤</span>Mild</span><span class="meta">12–20 °C</span></label>
         <label><input type="radio" name="temp" value="hot"><span class="top"><span class="ico">🔥</span>Hot</span><span class="meta">&gt; 20 °C</span></label>
       </div>
-    </div>
+    </fieldset>
 
-    <div class="field">
-      <div class="lbl"><span><span class="ico">💧</span>Sweat profile</span></div>
+    <fieldset class="field">
+      <legend class="lbl"><span><span class="ico" aria-hidden="true">💧</span>Sweat profile</span></legend>
       <div class="chips cols-2" id="sweat">
         <label><input type="radio" name="sweat" value="normal" checked><span class="top"><span class="ico">🙂</span>Average</span><span class="meta">No visible salt stains</span></label>
         <label><input type="radio" name="sweat" value="salty"><span class="top"><span class="ico">🧂</span>Salty</span><span class="meta">Salt rings, cramp history</span></label>
       </div>
-    </div>
+    </fieldset>
 
     <div class="field">
-      <div class="lbl"><span><span class="ico">🍶</span>Bottle / flask volume</span><span class="v-chip" id="lbl-bottle">500 ml</span></div>
+      <label class="lbl" for="bottle"><span><span class="ico" aria-hidden="true">🍶</span>Bottle / flask volume</span><span class="v-chip" id="lbl-bottle">500 ml</span></label>
       <input type="number" id="bottle" min="100" max="1000" step="50" value="500">
       <span class="hint">Handheld 500 ml · soft flask 250 ml · vest bottle 600 ml.</span>
     </div>
 
     <div class="field">
-      <div class="lbl"><span><span class="ico">☕</span>Caffeine plan</span></div>
+      <label class="lbl" for="caffeine"><span><span class="ico" aria-hidden="true">☕</span>Caffeine plan</span></label>
       <select id="caffeine">
         <option value="none">None</option>
         <option value="low" selected>Low — 3 mg/kg total</option>
@@ -864,6 +956,107 @@
     </div>
   </details>
 
+  <details class="extra" id="gels">
+    <summary>
+      <span class="sum-ico">🥄</span>
+      <span class="sum-text">
+        <span class="t">Beyond the bottle — DIY gels &amp; real-food snacks</span>
+        <span class="d">When liquid isn't enough: pantry gel recipes, rice cakes, and which solid foods survive race-day pace.</span>
+      </span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="body">
+      <p>Drinks deliver carbs + fluid + sodium together — but you can hit a fueling ceiling if your stomach won't take the volume. Gels (semi-solid, ~60&nbsp;% carb concentration) and real food let you stack carbs on top of your drink without diluting your hydration. <strong>Pfeiffer et&nbsp;al.&nbsp;2010</strong> showed exogenous CHO oxidation from a gel matches that of a drink at matched intake — so the form mostly affects palatability and GI tolerance, not absorption.</p>
+
+      <h3>DIY gel recipes (60&nbsp;% carb concentration, pantry-only)</h3>
+      <p class="muted">Target ~20–25 g carbs per ~30–40 g serving. Each recipe below makes 4–6 servings. Squeeze into a small soft flask or zip-lock corner.</p>
+      <div class="gel-grid">
+        <div class="gel-card">
+          <h4>🍯 Honey-salt gel <span class="tag">classic</span></h4>
+          <ul class="recipe-list">
+            <li>100 g honey</li>
+            <li>0.5 g salt (a pinch)</li>
+            <li>1 tsp lemon juice (helps it pour)</li>
+            <li>Optional: ½ tsp instant coffee = ~30 mg caffeine</li>
+          </ul>
+          <div class="yield">≈ 80 g carbs · ~1:1 glu:fru · 4 × 25-g servings</div>
+        </div>
+        <div class="gel-card">
+          <h4>🍁 Maple-syrup gel <span class="tag">smooth</span></h4>
+          <ul class="recipe-list">
+            <li>100 g pure maple syrup (Grade A)</li>
+            <li>0.5 g salt</li>
+            <li>5 ml water if too thick</li>
+          </ul>
+          <div class="yield">≈ 67 g carbs · mostly sucrose · 3 × 22-g servings</div>
+        </div>
+        <div class="gel-card">
+          <h4>🌴 Date paste gel <span class="tag">whole-food</span></h4>
+          <ul class="recipe-list">
+            <li>4 Medjool dates (≈70 g, pitted)</li>
+            <li>40–50 ml water</li>
+            <li>0.5 g salt · pinch cinnamon</li>
+            <li>Blend until smooth</li>
+          </ul>
+          <div class="yield">≈ 50 g carbs · 2–3 × 22-g servings · refrigerate</div>
+        </div>
+        <div class="gel-card">
+          <h4>🌾 Rice-syrup + fructose gel <span class="tag">high-rate</span></h4>
+          <ul class="recipe-list">
+            <li>80 g brown rice syrup</li>
+            <li>20 g pure fructose powder (1:0.8 glu:fru)</li>
+            <li>0.5 g salt · splash water to mix</li>
+          </ul>
+          <div class="yield">≈ 80 g carbs · gut-trained athletes only · 4 servings</div>
+        </div>
+      </div>
+
+      <h3>Real-food snacks — what actually works at pace</h3>
+      <table>
+        <thead><tr><th>Snack</th><th class="num">Carbs</th><th>Best pace</th><th>Caveats</th></tr></thead>
+        <tbody>
+          <tr><td><strong>🍙 Allen Lim rice cake</strong> (50 g)</td><td class="num">~25 g</td><td>4 h+ marathons, ultras</td><td>Recipe below. Easy on stomach, palate-cleansing.</td></tr>
+          <tr><td><strong>🌴 Medjool date</strong> (1 large, 24 g)</td><td class="num">~16 g</td><td>30–45 min top-ups</td><td>High fructose — cap at 2–3 per hour.</td></tr>
+          <tr><td><strong>🍌 Banana</strong> (medium, 120 g)</td><td class="num">~25 g</td><td>Aid-station grab</td><td>Some fiber; eat at walking pace.</td></tr>
+          <tr><td><strong>🐻 Gummy candy</strong> (10 pieces, ~30 g)</td><td class="num">~25 g</td><td>Any pace</td><td>Sucrose + glucose syrup — fast, easy, cheap.</td></tr>
+          <tr><td><strong>🥨 Pretzels</strong> (15 sticks, ~30 g)</td><td class="num">~22 g + 400 mg Na</td><td>Slow-pace sodium top-up</td><td>Hard to chew while breathing hard.</td></tr>
+          <tr><td><strong>🥔 Boiled potato + salt</strong> (1 small)</td><td class="num">~20 g</td><td>Ultra crew pickup</td><td>Slow chew, but classic ultra fuel.</td></tr>
+          <tr><td><strong>🍞 White-bread &amp; jam</strong> (½ sandwich)</td><td class="num">~25 g</td><td>4:30+ marathons</td><td>Fat content slows emptying; use sparingly.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Allen Lim rice cakes — the recipe</h3>
+      <p>From Skratch Labs / <em>Feed Zone Portables</em> (Lim &amp; Thomas, 2011). The gold standard for slower-paced endurance fueling — cooked sushi rice held together with egg, sweetened lightly, salted.</p>
+      <ul>
+        <li>1½ cups (≈300 g cooked) short-grain white rice</li>
+        <li>2 eggs, lightly beaten</li>
+        <li>50 g cane sugar · ½ tsp salt · pinch cinnamon</li>
+        <li>Cook eggs &amp; sugar in a pan until soft scramble; fold in warm rice; press into a parchment-lined dish; chill 30 min; cut into 50 g squares; wrap in foil.</li>
+      </ul>
+      <p class="muted">Each square ≈ 25 g carbs + ~100 mg sodium. Survives a long-run bottle pocket for 2–3 hours. Swap sugar for maple syrup for a deeper flavor; add a teaspoon of espresso powder for a caffeine bump.</p>
+
+      <h3>How to actually use them on race day</h3>
+      <ul>
+        <li><strong>Stack, don't swap.</strong> Use gels/snacks <em>on top of</em> your drink, not instead of it. Drink is your fluid + sodium base; gels are a carb top-up.</li>
+        <li><strong>1 gel ≈ 25 g carbs.</strong> One every 25–45 min depending on your hourly target. If your drink already gives you 60 g/h and you want 90 g/h, that's one extra ~25-g gel each half hour.</li>
+        <li><strong>Always chase with water.</strong> Gels are ~60&nbsp;% carb concentration — without a 100–150 ml water chase from an aid station, they sit in the stomach and create the slow-emptying feeling that triggers GI distress.</li>
+        <li><strong>Match form to pace.</strong> Faster than ~7&nbsp;min/mi (4:20 min/km): liquids + gels only. Slower than ~8&nbsp;min/mi (5:00 min/km): real food is a viable variety. In between: try in training.</li>
+        <li><strong>Rehearse the exact stack ≥ 4×.</strong> Costa &amp; Gaskell&nbsp;2025 (SDA/USSF position statement) put gut-training and tested-fueling as the two most-evidenced GI mitigators.</li>
+      </ul>
+
+      <h3>Risks &amp; common mistakes</h3>
+      <div class="notes">
+        <div class="note danger"><strong>Fructose stacking.</strong> Your drink already has ~50 % fructose (from sucrose). Add a honey or date gel (also ~50 % fructose) and you can blow past the GLUT5 ceiling (~60 g/h fructose) — bloating, urgent diarrhea. If you're going above 75 g/h total carbs, lean on rice-syrup or maltodextrin-based fuels for the extra grams.</div>
+        <div class="note danger"><strong>Concentrated carbs without water.</strong> A gel is ~3× more concentrated than your drink. Without a 100–150 ml plain-water chase, gastric emptying stalls and you'll feel like you swallowed a brick. <em>Always</em> take the gel within 1 min of an aid station.</div>
+        <div class="note warn"><strong>Caffeine accumulation.</strong> Many commercial gels carry 25–100 mg caffeine each. Stacked with the in-bottle instant coffee + a pre-race espresso, you can hit 6 mg/kg by halfway. Above ~9 mg/kg gives no further benefit and adds jitters/GI risk (Burke 2008). Track your total.</div>
+        <div class="note warn"><strong>Hidden fiber + fat in "natural" snacks.</strong> Whole-grain bread, nut butter, granola bars — popular pantry picks, but the fiber + fat slows gastric emptying. For a marathon, prefer refined-grain (white rice, white bread, sushi rice) and skip nut butters race-day.</div>
+        <div class="note warn"><strong>Hygiene for DIY gels.</strong> Honey- and maple-only gels are shelf-stable for days. Date or rice-cake gels need refrigeration until race morning. Mix the night before; carry in soft flasks washed with hot water + baking soda.</div>
+        <div class="note ok"><strong>"Hydrogel" is mostly marketing.</strong> Maurten popularized the sodium-alginate + pectin "hydrogel" claim. Two independent RCTs (McCubbin et al. 2020; Li et al. 2026 review) found no improvement in glucose availability, CHO oxidation, GI symptoms, or performance vs concentration-matched controls. The Maurten product works because of <em>what</em> is in it (1:0.8 malto:fru at 16&nbsp;% concentration), not because of the gel matrix. You can reproduce the function with sucrose at 8–10&nbsp;% + a water chase.</div>
+        <div class="note ok"><strong>Test in training, not on race day.</strong> Rehearse each gel recipe and snack at goal marathon pace at least 3–4 times during gut-training weeks 5–8. If it doesn't work in training, it won't work on race day.</div>
+      </div>
+    </div>
+  </details>
+
   <details class="extra">
     <summary>
       <span class="sum-ico">📐</span>
@@ -930,7 +1123,7 @@
       <span class="sum-ico">📚</span>
       <span class="sum-text">
         <span class="t">References — every number traced to a source</span>
-        <span class="d">15+ peer-reviewed papers and governing-body consensus statements.</span>
+        <span class="d">22+ peer-reviewed papers and governing-body consensus statements.</span>
       </span>
       <span class="chev">▾</span>
     </summary>
@@ -968,8 +1161,19 @@
         <li><strong>Grgic J et al.</strong> ISSN exercise &amp; sports nutrition position stand: sodium bicarbonate. <em>J Int Soc Sports Nutr</em> 2021;18:61. PMC 8427947. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8427947/" target="_blank" rel="noopener">PMC</a>. <em>Source for: 0.2–0.3 g/kg dose, 60–180 min pre, split-dose with food.</em></li>
       </ol>
 
-      <h3>Commercial reference</h3>
+      <h3>Gels, real-food &amp; gastrointestinal tolerance</h3>
       <ol start="16">
+        <li><strong>Pfeiffer B, Stellingwerff T, Zaltas E, Jeukendrup AE.</strong> CHO oxidation from a CHO gel compared with a drink during exercise. <em>Med Sci Sports Exerc</em> 2010;42(11):2038–2045. PMID 20404763. <a href="https://pubmed.ncbi.nlm.nih.gov/20404763/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: gels deliver equivalent exogenous CHO oxidation to drinks at matched intake.</em></li>
+        <li><strong>Pfeiffer B et al.</strong> Nutritional intake and gastrointestinal problems during competitive endurance events. <em>Med Sci Sports Exerc</em> 2012;44(2):344–351. PMID 21775906. <a href="https://pubmed.ncbi.nlm.nih.gov/21775906/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: real-world GI symptom prevalence and CHO intake patterns in marathon &amp; Ironman.</em></li>
+        <li><strong>McCubbin AJ, Zhu A, Gaskell SK, Costa RJS.</strong> Hydrogel Carbohydrate-Electrolyte Beverage Does Not Improve Glucose Availability, Substrate Oxidation, GI Symptoms or Performance vs Matched Placebo. <em>Int J Sport Nutr Exerc Metab</em> 2020;30(1):25–33. PMID 31629348. <a href="https://pubmed.ncbi.nlm.nih.gov/31629348/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: alginate/pectin hydrogel offers no benefit over concentration-matched CES.</em></li>
+        <li><strong>Li P, Song Q, Xu N.</strong> Plant-derived alginate polysaccharide hydrogels in sport &amp; exercise nutrition. <em>Front Nutr</em> 2026. PMID 42039889. <a href="https://pubmed.ncbi.nlm.nih.gov/42039889/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: narrative review confirming inconsistent hydrogel benefit across endpoints.</em></li>
+        <li><strong>Costa RJS, Gaskell SK, Henningsen K, et al.</strong> Sports Dietitians Australia &amp; Ultra Sports Science Foundation Joint Position Statement: Prevention &amp; Management of Exercise-Associated Gastrointestinal Perturbations. <em>Sports Med</em> 2025. PMID 40195264. <a href="https://pubmed.ncbi.nlm.nih.gov/40195264/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: gut-training, FODMAP awareness, and hydration as most-evidenced GI mitigators.</em></li>
+        <li><strong>Costa RJS, Gaskell SK.</strong> A Practitioner's Guide to Identifying, Assessing, and Managing Gut Issues in Athletes. <em>Int J Sports Med</em> 2026. PMID 42155582. <a href="https://pubmed.ncbi.nlm.nih.gov/42155582/" target="_blank" rel="noopener">PubMed</a>. <em>Source for: four-phase athlete support pathway for EIGS.</em></li>
+        <li><strong>Lim AL, Thomas BC.</strong> <em>Feed Zone Portables: A Cookbook of On-the-Go Food for Athletes.</em> VeloPress, 2013. ISBN 978-1937715007. <a href="https://www.skratchlabs.com/" target="_blank" rel="noopener">Skratch Labs</a>. <em>Source for: rice-cake recipe and refined-carb real-food fueling.</em></li>
+      </ol>
+
+      <h3>Commercial reference</h3>
+      <ol start="23">
         <li><strong>Maurten Drink Mix 320</strong> — 80 g carbs per 500 ml = 16 % w/v; ingredients: maltodextrin, fructose, sodium alginate, pectin, salt, sodium bicarbonate. <a href="https://www.maurten.com/products/drink-mix-320-box-us" target="_blank" rel="noopener">Maurten product page</a>. <em>Source for: hydrogel mechanism, 16 % drink concentration benchmark.</em></li>
       </ol>
 
@@ -1000,6 +1204,17 @@
     return n.toLocaleString(undefined, { minimumFractionDigits: digits, maximumFractionDigits: digits });
   }
   function round(n, step) { return Math.round(n / step) * step; }
+
+  // setText: write a new value and flash the element if the value changed.
+  // Lets the UI feel alive without animating every irrelevant render.
+  function setText(el, newText) {
+    if (!el) return;
+    if (el.textContent === newText) return;
+    el.textContent = newText;
+    el.classList.remove("flash");
+    void el.offsetWidth; // restart animation
+    el.classList.add("flash");
+  }
 
   // ---------- constants ----------
   const LEVELS = {
@@ -1110,26 +1325,26 @@
     const r = compute();
 
     // input chips (live value summaries)
-    $("lbl-mass").textContent = fmt(r.mass) + " kg";
+    setText($("lbl-mass"), fmt(r.mass) + " kg");
     const h = Math.floor(r.raceHours);
     const m = Math.round((r.raceHours - h) * 60);
-    $("lbl-time").textContent = h + ":" + (m < 10 ? "0" + m : m);
-    $("lbl-carbs").textContent = fmt(r.carbsPerHour) + " g/h";
-    $("lbl-bottle").textContent = fmt(r.bottleMl) + " ml";
+    setText($("lbl-time"), h + ":" + (m < 10 ? "0" + m : m));
+    setText($("lbl-carbs"), fmt(r.carbsPerHour) + " g/h");
+    setText($("lbl-bottle"), fmt(r.bottleMl) + " ml");
 
-    // top stats
-    $("o-carbs").textContent = fmt(r.carbsPerHour) + " g/h";
+    // top stats — setText flashes only when the value actually changes
+    setText($("o-carbs"), fmt(r.carbsPerHour) + " g/h");
     $("o-carbs-total").textContent = fmt(r.totalCarbs) + " g over " + fmt(r.raceHours, 2) + " h";
 
-    $("o-fluid").textContent = fmt(round(r.fluidPerHour, 25)) + " ml/h";
+    setText($("o-fluid"), fmt(round(r.fluidPerHour, 25)) + " ml/h");
     $("o-fluid-total").textContent = fmt(round(r.totalFluidTarget, 50)) + " ml total" +
       (r.extraWaterMl > 25 ? " (incl. " + fmt(round(r.extraWaterMl, 50)) + " ml plain water)" : "");
 
-    $("o-sodium").textContent = fmt(r.sodiumPerHour) + " mg/h";
+    setText($("o-sodium"), fmt(r.sodiumPerHour) + " mg/h");
     $("o-sodium-total").textContent = fmt(round(r.totalSodium, 50)) + " mg total" +
       (r.saltCapsuleMg > 0 ? " (+" + fmt(round(r.saltCapsuleMg, 50)) + " mg capsule)" : "");
 
-    $("o-conc").textContent = r.concPct + " %";
+    setText($("o-conc"), r.concPct + " %");
     let concSub = "";
     if (r.concPct <= 8) concSub = "Isotonic-ish, fast emptying";
     else if (r.concPct <= 10) concSub = "Just above isotonic — train your gut";
@@ -1140,7 +1355,7 @@
     const ratioStr = r.fructoseTotal > 0
       ? (r.ratioG.toFixed(2) + " : 1")
       : "all glucose";
-    $("o-ratio").textContent = ratioStr;
+    setText($("o-ratio"), ratioStr);
     let ratioSub;
     if (r.fructoseTotal === 0) ratioSub = "—";
     else if (r.ratioG <= 1.2) ratioSub = "Maurten-like (1:1)";
@@ -1148,16 +1363,16 @@
     else ratioSub = "Glucose-heavy";
     $("o-ratio-sub").textContent = ratioSub;
 
-    $("o-bottles").textContent = r.bottleCount + " × " + fmt(round(r.actualBottleMl, 25)) + " ml";
+    setText($("o-bottles"), r.bottleCount + " × " + fmt(round(r.actualBottleMl, 25)) + " ml");
     const minsPerBottle = (r.raceHours * 60) / r.bottleCount;
     $("o-bottles-sub").textContent = "One every ~" + fmt(round(minsPerBottle, 5)) + " min";
 
     if (r.caffeineTotal > 0) {
-      $("o-caff").textContent = fmt(r.caffeineTotal) + " mg";
+      setText($("o-caff"), fmt(r.caffeineTotal) + " mg");
       $("o-caff-sub").textContent = CAFFEINE[r.caffeineKey] + " mg/kg · " +
         fmt(r.caffeineTotal * 0.5) + " pre + " + fmt(r.caffeineTotal * 0.5) + " in-race";
     } else {
-      $("o-caff").textContent = "None";
+      setText($("o-caff"), "None");
       $("o-caff-sub").textContent = "No caffeine planned";
     }
 
@@ -1315,10 +1530,30 @@
   }
 
   // ---------- wiring ----------
+  // Open a collapsible smoothly without yanking scroll position.
+  function nudgeOpen(id) {
+    const el = $(id);
+    if (el && !el.open) el.open = true;
+  }
+
+  // Level-driven adaptation: when the user picks a level, the most relevant
+  // deep-dive opens automatically so the page rearranges around their need.
+  function adaptForLevel(key) {
+    if (key === "beginner" || key === "recreational") {
+      nudgeOpen("gut");
+    } else if (key === "subelite") {
+      nudgeOpen("gels");
+    } else if (key === "elite") {
+      nudgeOpen("gels");
+      nudgeOpen("bicarb");
+    }
+  }
+
   document.querySelectorAll('input[name="level"]').forEach(function (el) {
     el.addEventListener("change", function () {
       const key = el.value;
       $("carbs").value = LEVELS[key].carbs;
+      adaptForLevel(key);
       render();
     });
   });
