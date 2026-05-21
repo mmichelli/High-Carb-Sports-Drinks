@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <!-- paper -->
+  <rect width="1200" height="630" fill="#f4f4f0"/>
+
+  <!-- top hairline -->
+  <line x1="60" y1="80" x2="1140" y2="80" stroke="#0a0a08" stroke-width="1"/>
+
+  <!-- top labels -->
+  <g font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="18" fill="#0a0a08" letter-spacing="3">
+    <text x="60" y="56">MARATHON FUEL</text>
+    <text x="1140" y="56" text-anchor="end">BATCH N° 042</text>
+  </g>
+
+  <!-- monumental headline -->
+  <g font-family="'Arial Narrow', 'Helvetica Neue Condensed', Impact, sans-serif" font-weight="900" fill="#0a0a08">
+    <text x="60" y="240" font-size="180" letter-spacing="-2">A PANTRY</text>
+    <!-- highlighted word -->
+    <rect x="50" y="270" width="900" height="138" fill="#1f3aff"/>
+    <text x="60" y="380" font-size="180" letter-spacing="-2" fill="#ffffff">SPORTS DRINK</text>
+    <text x="60" y="520" font-size="180" letter-spacing="-2">FOR 42.195 KM.</text>
+  </g>
+
+  <!-- footer line -->
+  <line x1="60" y1="565" x2="1140" y2="565" stroke="#0a0a08" stroke-width="1"/>
+  <g font-family="ui-monospace, 'JetBrains Mono', Menlo, monospace" font-size="18" fill="#0a0a08" letter-spacing="3">
+    <text x="60" y="600">PANTRY-FUELED · OPEN-SOURCE · 21 SOURCES</text>
+    <text x="1140" y="600" text-anchor="end">C₁₂H₂₂O₁₁ · NaCl</text>
+  </g>
+</svg>
