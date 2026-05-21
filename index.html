@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a0a08">
-<title>MF/01 — Marathon Fuel · Engineered in a Kitchen</title>
+<title>Marathon Fuel — A Pantry Sports Drink for 42.195 km</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:        #f4f4f0;
@@ -17,9 +17,12 @@
     --muted:     #6f6f6a;
     --line:      #d8d8d4;
     --hairline:  #1c1c1a;
-    --hi:        #dcff1c;            /* hazard yellow */
-    --hi-deep:   #b8d917;
+    --hi:        #1f3aff;            /* electric cobalt — for light backgrounds */
+    --hi-light:  #99aaff;            /* same hue as --hi (231°), lighter (L 80%) — for dark backgrounds */
+    --hi-deep:   #1426c2;
+    --hi-soft:   #e0e5ff;
     --red:       #d3210a;            /* alert red */
+    --amber:     #d97706;
     --green:     #00754a;
     --max-w: 1480px;
     --gutter: 32px;
@@ -39,7 +42,14 @@
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
-  ::selection { background: var(--hi); color: var(--ink); }
+  ::selection { background: var(--hi); color: #fff; }
+
+  /* Big Shoulders for monumental numerals + display */
+  .display-cond {
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+  }
 
   /* ----- type utilities ----- */
   .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; }
@@ -81,18 +91,30 @@
   }
   .brand {
     display: inline-flex;
-    align-items: baseline;
-    gap: 10px;
-    font-family: "Hanken Grotesk", sans-serif;
+    align-items: center;
+    gap: 16px;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: 1.05rem;
-    letter-spacing: 0.02em;
+    font-size: 1.4rem;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: var(--ink);
     text-decoration: none;
+    line-height: 1;
   }
-  .brand .slash { color: var(--hi-deep); font-weight: 800; }
-  .brand .sub { font-family: "JetBrains Mono", monospace; font-size: 0.68rem; letter-spacing: 0.18em; color: var(--muted); font-weight: 500; }
+  .brand .sub {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: none;
+    padding-left: 16px;
+    border-left: 1px solid var(--hairline);
+    line-height: 1.4;
+  }
+  .brand .sub sub { font-size: 0.78em; vertical-align: baseline; position: relative; top: 0.15em; }
+  @media (max-width: 720px) { .brand .sub { display: none; } }
 
   nav.primary {
     display: flex;
@@ -113,26 +135,34 @@
   }
   nav.primary a:hover, nav.primary a:focus-visible { border-bottom-color: var(--ink); outline: none; }
   @media (max-width: 880px) { nav.primary { display: none; } }
+  @media (max-width: 720px) { .topbar .inner { height: 52px; } }
 
-  .top-right {
+  .top-right { display: inline-flex; align-items: center; }
+  .top-right .gh {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
     font-family: "JetBrains Mono", monospace;
-    font-size: 0.7rem;
+    font-size: 0.74rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--ink);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+    transition: background .12s, color .12s;
   }
-  .top-right .dot {
-    display: inline-block;
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--hi-deep);
-    margin-right: 6px;
-    vertical-align: middle;
+  .top-right .gh:hover, .top-right .gh:focus-visible {
+    background: var(--ink);
+    color: var(--bg);
+    outline: none;
   }
-  @media (max-width: 540px) { .top-right { font-size: 0.62rem; gap: 8px; } }
+  .top-right .gh svg { display: block; }
+  @media (max-width: 540px) {
+    .top-right .gh { padding: 6px 10px; font-size: 0.66rem; gap: 6px; }
+    .top-right .gh span { display: none; }
+  }
 
   /* ========== HERO ========== */
   .hero {
@@ -145,10 +175,19 @@
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     gap: 56px;
     align-items: stretch;
-    padding: 80px 0 64px;
+    padding-top: 80px;
+    padding-bottom: 64px;
   }
   @media (max-width: 980px) {
-    .hero .inner { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 40px; }
+    .hero .inner { grid-template-columns: 1fr; gap: 28px; padding-top: 28px; padding-bottom: 36px; }
+    .hero h1 { margin-top: 14px; }
+  }
+  @media (max-width: 540px) {
+    .hero .inner { gap: 22px; padding-top: 18px; padding-bottom: 28px; }
+    .hero .eyebrow { font-size: 0.68rem; gap: 8px; }
+    .hero h1 { margin-top: 10px; }
+    .hero .deck { margin-top: 12px; }
+    .hero .hero-bottom { margin-top: 22px; }
   }
   .hero .left {
     display: flex;
@@ -168,23 +207,24 @@
   }
   .hero .eyebrow .tag {
     background: var(--ink);
-    color: var(--hi);
+    color: var(--hi-light);
     padding: 3px 9px;
     font-weight: 500;
     letter-spacing: 0.14em;
   }
   .hero h1 {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(3rem, 8.5vw, 7rem);
-    line-height: 0.92;
-    letter-spacing: -0.035em;
+    font-size: clamp(3.5rem, 11vw, 9rem);
+    line-height: 0.86;
+    letter-spacing: -0.005em;
     margin: 22px 0 0;
     color: var(--ink);
     text-transform: uppercase;
   }
   .hero h1 .hi {
     background: var(--hi);
+    color: #fff;
     padding: 0 0.08em;
     margin: 0 -0.04em;
     display: inline-block;
@@ -223,7 +263,7 @@
     transition: background .15s, color .15s;
     cursor: pointer;
   }
-  .btn:hover { background: var(--hi); color: var(--ink); }
+  .btn:hover { background: var(--hi); color: #fff; border-color: var(--hi); }
   .btn .arrow { display: inline-block; transition: transform .2s; }
   .btn:hover .arrow { transform: translateX(4px); }
   .btn.ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
@@ -254,7 +294,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--hi);
+    color: var(--hi-light);
     font-weight: 500;
   }
   .spec-card .head .ref {
@@ -279,11 +319,11 @@
     margin-bottom: 8px;
   }
   .spec-card .figure .v {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(4rem, 10vw, 6rem);
-    line-height: 0.88;
-    letter-spacing: -0.04em;
+    font-size: clamp(4.5rem, 11vw, 7rem);
+    line-height: 0.85;
+    letter-spacing: 0;
     color: var(--ink);
     font-variant-numeric: tabular-nums lining-nums;
     display: flex;
@@ -293,12 +333,11 @@
   }
   .spec-card .figure .v .unit {
     font-size: 0.34em;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted);
     background: var(--hi);
-    color: var(--ink);
+    color: #fff;
     padding: 2px 8px;
   }
   .spec-card .figure .sub {
@@ -336,6 +375,38 @@
     font-variant-numeric: tabular-nums;
     line-height: 1.2;
   }
+  .spec-card .figure .k sub { font-size: 0.72em; }
+  .spec-card .geom .k sub { font-size: 0.72em; }
+  .spec-card .sign {
+    border-top: 1px solid var(--hairline);
+    padding: 16px 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .spec-card .sig-line {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 6px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+  }
+  .spec-card .sig-line .lab {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .spec-card .sig-line .sig {
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
 
   /* ========== TICKER STRIP ========== */
   .ticker {
@@ -356,7 +427,7 @@
     animation: ticker 38s linear infinite;
   }
   .ticker .inner > span { display: inline-flex; align-items: center; gap: 12px; }
-  .ticker .star { color: var(--hi); }
+  .ticker .star { color: var(--hi-light); }
   @keyframes ticker {
     from { transform: translateX(0); }
     to   { transform: translateX(-50%); }
@@ -381,11 +452,11 @@
     padding-bottom: 6px;
   }
   .section-head h2 {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(2rem, 5vw, 3.6rem);
-    line-height: 0.96;
-    letter-spacing: -0.03em;
+    font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+    line-height: 0.9;
+    letter-spacing: 0;
     margin: 0;
     text-transform: uppercase;
   }
@@ -400,8 +471,11 @@
     padding-bottom: 6px;
   }
   @media (max-width: 720px) {
-    .section-head { grid-template-columns: 1fr; padding: 48px 0 24px; gap: 8px; }
+    .section-head { grid-template-columns: 1fr; padding: 32px 0 18px; gap: 8px; }
     .section-head .meta { text-align: left; }
+  }
+  @media (max-width: 540px) {
+    .section-head { padding: 24px 0 14px; }
   }
 
   /* ========== CALCULATOR ========== */
@@ -462,7 +536,7 @@
     font-size: 0.95rem;
     text-transform: none;
     letter-spacing: 0;
-    color: var(--ink);
+    color: #fff;
     background: var(--hi);
     padding: 2px 8px;
     font-variant-numeric: tabular-nums;
@@ -517,11 +591,11 @@
     margin: 0 0 14px;
   }
   .slider-display .num {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 5vw, 3.4rem);
-    line-height: 0.9;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.8rem, 6vw, 4.2rem);
+    line-height: 0.85;
+    letter-spacing: 0;
     color: var(--ink);
     font-variant-numeric: tabular-nums lining-nums;
   }
@@ -530,7 +604,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: #fff;
     background: var(--hi);
     padding: 2px 8px;
     margin-left: 8px;
@@ -646,7 +720,8 @@
     display: block;
   }
   .chips label:hover { background: var(--bg-2); }
-  .chips label:focus-within { background: var(--hi); outline: none; }
+  .chips label:focus-within { background: var(--hi); color: #fff; outline: none; }
+  .chips label:focus-within .top, .chips label:focus-within .meta { color: #fff; }
   .chips input { position: absolute; opacity: 0; pointer-events: none; }
   .chips label .ballot {
     position: absolute;
@@ -694,16 +769,16 @@
     font-size: 0.72rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--hi);
+    color: var(--hi-light);
     font-weight: 500;
     margin-bottom: 4px;
   }
   .out-hero .v {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(4.5rem, 11vw, 7.5rem);
+    font-size: clamp(5rem, 13vw, 9rem);
     line-height: 0.85;
-    letter-spacing: -0.04em;
+    letter-spacing: 0;
     color: var(--bg);
     font-variant-numeric: tabular-nums lining-nums;
     display: flex;
@@ -715,7 +790,7 @@
     font-size: 0.28em;
     font-weight: 700;
     background: var(--hi);
-    color: var(--ink);
+    color: #fff;
     padding: 4px 10px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -765,11 +840,11 @@
     margin-bottom: 8px;
   }
   .out-grid .cell .v {
-    font-family: "Hanken Grotesk", sans-serif;
-    font-weight: 900;
-    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
-    line-height: 1;
-    letter-spacing: -0.025em;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+    line-height: 0.95;
+    letter-spacing: 0;
     font-variant-numeric: tabular-nums lining-nums;
     color: var(--ink);
   }
@@ -957,7 +1032,7 @@
     font-size: 0.66rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: #fff;
     background: var(--hi);
     padding: 3px 8px;
     font-weight: 600;
@@ -1041,7 +1116,7 @@
     font-family: "Hanken Grotesk", sans-serif;
     font-weight: 900;
     text-transform: uppercase;
-    color: var(--ink);
+    color: #fff;
     white-space: nowrap;
     background: var(--hi);
     padding: 8px 12px;
@@ -1059,14 +1134,14 @@
   .statement blockquote {
     margin: 0 auto;
     max-width: 22ch;
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 7vw, 5rem);
-    line-height: 0.96;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: 0;
     text-transform: uppercase;
   }
-  .statement blockquote .hi { background: var(--hi); color: var(--ink); padding: 0 0.08em; margin: 0 -0.04em; }
+  .statement blockquote .hi { background: var(--hi); color: #fff; padding: 0 0.08em; margin: 0 -0.04em; }
   .statement cite {
     display: block;
     margin-top: 28px;
@@ -1074,7 +1149,7 @@
     font-size: 0.74rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--hi);
+    color: var(--hi-light);
     font-style: normal;
   }
 
@@ -1135,7 +1210,7 @@
     border-bottom: 1px solid var(--hi-deep);
     transition: background .15s;
   }
-  .refs a:hover { background: var(--hi); }
+  .refs a:hover { background: var(--hi); color: #fff; border-bottom-color: var(--hi); }
 
   /* ========== FOOTER ========== */
   footer.foot {
@@ -1154,18 +1229,19 @@
     font-size: 0.7rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--hi);
+    color: var(--hi-light);
     font-weight: 500;
     margin: 0 0 12px;
   }
   footer.foot .brand-foot {
-    font-family: "Hanken Grotesk", sans-serif;
+    font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: 1.6rem;
+    font-size: 2rem;
     text-transform: uppercase;
     margin-bottom: 12px;
+    letter-spacing: 0;
+    line-height: 0.95;
   }
-  footer.foot .brand-foot .slash { color: var(--hi); }
   footer.foot .meta {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.74rem;
@@ -1190,15 +1266,15 @@
 
   /* ========== ANIMATIONS ========== */
   @keyframes flash-hi {
-    0%   { background: var(--hi); color: var(--ink); }
-    100% { background: transparent; }
+    0%   { background: var(--hi); color: #fff; }
+    100% { background: transparent; color: var(--ink); }
   }
   @keyframes flash-inverse {
     0%   { color: var(--hi); }
     100% { color: var(--bg); }
   }
   .v-chip.flash       { animation: flash-hi .8s ease-out; }
-  .out-grid .v.flash  { background: var(--hi); animation: flash-hi .8s ease-out; }
+  .out-grid .v.flash  { animation: flash-hi .8s ease-out; }
   .out-hero .v.flash  { animation: flash-inverse .8s ease-out; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1219,8 +1295,8 @@
 <header class="topbar">
   <div class="container inner">
     <a class="brand" href="#">
-      MF<span class="slash">/</span>01
-      <span class="sub">Marathon Fuel · v1</span>
+      Marathon&nbsp;Fuel
+      <span class="sub">C<sub>12</sub>H<sub>22</sub>O<sub>11</sub>&nbsp;·&nbsp;NaCl</span>
     </a>
     <nav class="primary" aria-label="Sections">
       <a href="#calculator">Calculator</a>
@@ -1230,8 +1306,12 @@
       <a href="#references">Sources</a>
     </nav>
     <div class="top-right">
-      <span><span class="dot"></span>LIVE</span>
-      <span>OPEN-SOURCE</span>
+      <a class="gh" href="https://github.com/mmichelli/High-Carb-Sports-Drinks" target="_blank" rel="noopener" aria-label="Source on GitHub">
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span>Source</span>
+      </a>
     </div>
   </div>
 </header>
@@ -1241,13 +1321,13 @@
   <div class="container inner">
     <div class="left">
       <div>
-        <div class="eyebrow"><span class="tag">MF/01</span> Engineered in a Kitchen · No Hydrogel Required</div>
+        <div class="eyebrow"><span class="tag">BATCH&nbsp;Nº&nbsp;042</span> Engineered in a Kitchen · No Hydrogel Required</div>
         <h1>
           A pantry<br>
           <span class="hi">sports drink</span><br>
           for 42.195&nbsp;km.
         </h1>
-        <p class="deck">A live, evidence-based calculator that returns grams-per-bottle of sucrose and salt sized to your body, your goal, and the forecast. Eight sections, 22 peer-reviewed sources, zero marketing.</p>
+        <p class="deck">A live, evidence-based calculator that returns grams-per-bottle of sucrose and salt sized to your body, your goal, and the forecast. Five sections, 21 peer-reviewed sources, zero marketing.</p>
       </div>
       <div class="hero-bottom">
         <a class="btn" href="#calculator">Build the Drink <span class="arrow">→</span></a>
@@ -1255,21 +1335,31 @@
       </div>
     </div>
 
-    <aside class="spec-card" aria-label="Sample spec">
+    <aside class="spec-card" aria-label="Sample specimen sheet">
       <div class="head">
-        <span class="t">MF/01 · Recipe</span>
-        <span class="ref">SPEC SHEET</span>
+        <span class="t">Specimen · Lab Data</span>
+        <span class="ref">SHEET 01 / 06</span>
       </div>
       <div class="figure">
-        <div class="k">Carbohydrate target</div>
+        <div class="k">Compound · Sucrose (C<sub>12</sub>H<sub>22</sub>O<sub>11</sub>)</div>
         <div class="v"><span class="tab-nums">75</span><span class="unit">g/h</span></div>
         <div class="sub">Sub-elite tier · 60–90 g/h band · sucrose only</div>
       </div>
       <div class="geom">
-        <div class="cell"><div class="k">Fluid</div><div class="v tab-nums">550 ml/h</div></div>
-        <div class="cell"><div class="k">Sodium</div><div class="v tab-nums">550 mg/h</div></div>
-        <div class="cell"><div class="k">Drink %</div><div class="v tab-nums">8 %</div></div>
+        <div class="cell"><div class="k">H<sub>2</sub>O</div><div class="v tab-nums">550 ml/h</div></div>
+        <div class="cell"><div class="k">NaCl</div><div class="v tab-nums">550 mg/h</div></div>
+        <div class="cell"><div class="k">Conc.</div><div class="v tab-nums">8 % w/v</div></div>
         <div class="cell"><div class="k">Glu : Fru</div><div class="v tab-nums">1.00 : 1</div></div>
+      </div>
+      <div class="sign">
+        <div class="sig-line">
+          <span class="lab">Signed</span>
+          <span class="sig">M. Marathon</span>
+        </div>
+        <div class="sig-line">
+          <span class="lab">Tested</span>
+          <span class="sig">n = 21 studies</span>
+        </div>
       </div>
     </aside>
   </div>
@@ -1494,7 +1584,7 @@
           <li>Lemon juice<span class="amt">1 tsp</span></li>
           <li>Instant coffee (optional)<span class="amt">½ tsp</span></li>
         </ul>
-        <div class="yield">≈ 80 g carbs · 1:1 glu:fru · 4 × 25 g</div>
+        <div class="yield">≈ 80 g carbs · slight fructose lean · 4 × 25 g</div>
       </article>
       <article class="rec-card">
         <span class="badge">Smooth</span>
@@ -1510,11 +1600,11 @@
         <span class="badge">Whole food</span>
         <h4>Date paste gel</h4>
         <ul>
-          <li>Medjool dates (pitted)<span class="amt">4 · 70 g</span></li>
+          <li>Medjool dates (pitted)<span class="amt">3 · ~72 g</span></li>
           <li>Water<span class="amt">40–50 ml</span></li>
           <li>Sea salt · cinnamon<span class="amt">pinch ea.</span></li>
         </ul>
-        <div class="yield">≈ 50 g carbs · refrigerate · 2–3 × 22 g</div>
+        <div class="yield">≈ 54 g carbs · refrigerate · 2 × 27 g</div>
       </article>
       <article class="rec-card">
         <span class="badge">High rate</span>
@@ -1524,7 +1614,7 @@
           <li>Pure fructose powder<span class="amt">20 g</span></li>
           <li>Sea salt<span class="amt">0.5 g</span></li>
         </ul>
-        <div class="yield">≈ 80 g carbs · 1:0.8 glu:fru · gut-trained only</div>
+        <div class="yield">≈ 80 g carbs · glucose-dominant · gut-trained only</div>
       </article>
     </div>
 
@@ -1560,7 +1650,7 @@
       <li><strong>One gel ≈ 25 g carbs</strong>, every 25–45 min depending on hourly target.</li>
       <li><strong>Always chase with water.</strong> Gels are ~60 % carb concentration — without 100–150 ml plain-water chase, gastric emptying stalls.</li>
       <li><strong>Match form to pace.</strong> Faster than ~7 min/mi: liquids &amp; gels only. Slower than ~8 min/mi: real food is viable.</li>
-      <li><strong>Rehearse ≥ 4×.</strong> Costa &amp; Gaskell 2025 put gut-training and tested-fueling as the two most-evidenced GI mitigators.</li>
+      <li><strong>Rehearse ≥ 4×.</strong> The SDA/USSF 2025 position statement lists gut training, carbohydrate &amp; protein intake, euhydration, and FODMAP awareness as the most-evidenced GI-symptom mitigators — practicing the exact fuel is your most controllable variable.</li>
     </ul>
 
     <h3 class="sub"><span>Risks &amp; common mistakes</span><span class="small">Read before race week</span></h3>
@@ -1646,7 +1736,7 @@
 
     <div class="notes">
       <div class="note danger"><span class="tag">GI risk</span><p><strong>GI risk is real.</strong> Common: bloating, nausea, diarrhea, vomiting. Mitigate by (1) split-dosing, (2) taking with carb-rich food, (3) drinking plenty of water, (4) starting at 0.2 g/kg the first 2–3 times. <strong>Never race-day-debut bicarb.</strong> Practice it 3–5 times on long runs first.</p></div>
-      <div class="note warn"><span class="tag">Skip if</span><p><strong>Skip bicarb if</strong> you have high blood pressure, kidney issues, or a history of bicarb-induced GI distress that didn't resolve with practice. The extra sodium (~1100 mg per 3 g of baking soda) stacks on top of your in-race sodium plan — don't double up.</p></div>
+      <div class="note warn"><span class="tag">Skip if</span><p><strong>Skip bicarb if</strong> you have high blood pressure, kidney issues, or a history of bicarb-induced GI distress that didn't resolve with practice. NaHCO₃ is 27 % sodium by mass — a standard 0.3 g/kg dose for a 70 kg runner delivers ~5.7 g of sodium on top of your in-race plan. Don't double up.</p></div>
       <div class="note ok"><span class="tag">How</span><p><strong>How to take it.</strong> Mix the dose into water (it fizzes and tastes salty; lemon juice helps). Drink with your pre-race meal. Buffering peaks 90–180 min after the last dose, which is why split-loading 60–180 min pre-start works.</p></div>
       <div class="note ok"><span class="tag">Context</span><p><strong>Marathon context.</strong> Bicarb's evidence base is strongest for 1–10 min all-out efforts; for the marathon, expect a smaller and more individual benefit. If your goal pace is conversational, the GI risk likely outweighs the gain — skip it.</p></div>
     </div>
@@ -1719,8 +1809,8 @@
 <footer class="foot">
   <div class="container inner">
     <div class="col">
-      <div class="brand-foot">MF<span class="slash">/</span>01</div>
-      <div class="meta">Marathon Fuel · v1<br>Engineered in a kitchen · Open-source<br>No ads · No accounts</div>
+      <div class="brand-foot">Marathon Fuel</div>
+      <div class="meta">C<sub>12</sub>H<sub>22</sub>O<sub>11</sub> · NaCl · H<sub>2</sub>O<br>Engineered in a kitchen · Open-source<br>No ads · No accounts</div>
     </div>
     <div class="col">
       <h4>Sections</h4>
@@ -1735,9 +1825,9 @@
     <div class="col">
       <h4>Colophon</h4>
       <div class="meta">
-        Set in Hanken Grotesk &amp; JetBrains Mono.<br>
-        Built with vanilla HTML/CSS/JS.<br>
-        Edition CXXVI.
+        Set in Big Shoulders Display, Hanken Grotesk &amp; JetBrains Mono.<br>
+        Built with vanilla HTML / CSS / JS.<br>
+        Batch Nº 042 · 2026
       </div>
     </div>
   </div>
@@ -1908,16 +1998,16 @@
 
     let recipeName, strategy;
     if (r.concPct <= 6) {
-      recipeName = "MF-A · 6 % Isotonic";
+      recipeName = "Formulation 06 · Isotonic Sucrose + Saline";
       strategy = "Drink the mix throughout. Fast gastric emptying. Sucrose alone gives a natural 1:1 glucose:fructose ratio in the gut.";
     } else if (r.concPct <= 8) {
-      recipeName = "MF-B · 8 % Sucrose + Salt";
+      recipeName = "Formulation 08 · Sucrose + Saline";
       strategy = "Top of the fast-emptying zone. Still pure household sugar — the 50:50 split of sucrose into glucose + fructose covers two intestinal transporters.";
     } else if (r.concPct <= 10) {
-      recipeName = "MF-C · 10 % Concentrated";
+      recipeName = "Formulation 10 · Concentrated Sucrose";
       strategy = "Sip the bottle; chase 100–150 ml plain water from aid stations every ~20 min to keep gastric emptying fast.";
     } else {
-      recipeName = "MF-D · 12 % Flask + Water";
+      recipeName = "Formulation 12 · High-Concentration Flask";
       strategy = "Carry concentrated flask(s); sip ~25–30 % every 20–25 min and chase with 100–150 ml plain water from aid stations. Requires gut training.";
     }
     $("r-name").textContent = recipeName;
