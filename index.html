@@ -137,6 +137,42 @@
   @media (max-width: 880px) { nav.primary { display: none; } }
   @media (max-width: 720px) { .topbar .inner { height: 52px; } }
 
+  /* mobile nav strip — visible under the topbar at small widths */
+  nav.mobile-nav {
+    display: none;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--bg);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav.mobile-nav::-webkit-scrollbar { display: none; }
+  nav.mobile-nav .row {
+    display: flex;
+    gap: 0;
+    padding: 0;
+    min-width: max-content;
+  }
+  nav.mobile-nav a {
+    flex: 0 0 auto;
+    padding: 14px 16px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    border-right: 1px solid var(--hairline);
+    white-space: nowrap;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  nav.mobile-nav a:last-child { border-right: 0; }
+  nav.mobile-nav a:active,
+  nav.mobile-nav a:focus-visible { background: var(--ink); color: var(--bg); outline: none; }
+  @media (max-width: 880px) { nav.mobile-nav { display: block; } }
+
   .top-right { display: inline-flex; align-items: center; }
   .top-right .gh {
     display: inline-flex;
@@ -160,7 +196,7 @@
   }
   .top-right .gh svg { display: block; }
   @media (max-width: 540px) {
-    .top-right .gh { padding: 6px 10px; font-size: 0.66rem; gap: 6px; }
+    .top-right .gh { padding: 12px 12px; font-size: 0.66rem; gap: 6px; min-width: 44px; min-height: 44px; justify-content: center; }
     .top-right .gh span { display: none; }
   }
 
@@ -277,8 +313,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    min-height: 380px;
   }
+  @media (min-width: 981px) { .spec-card { min-height: 380px; } }
   .spec-card .head {
     padding: 14px 22px;
     border-bottom: 1px solid var(--hairline);
@@ -321,7 +357,7 @@
   .spec-card .figure .v {
     font-family: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
     font-weight: 900;
-    font-size: clamp(4.5rem, 11vw, 7rem);
+    font-size: clamp(4rem, 9vw, 7rem);
     line-height: 0.85;
     letter-spacing: 0;
     color: var(--ink);
@@ -329,7 +365,7 @@
     display: flex;
     align-items: baseline;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   .spec-card .figure .v .unit {
     font-size: 0.34em;
@@ -347,11 +383,11 @@
     margin-top: 6px;
   }
   .spec-card .geom {
-    flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0;
   }
+  @media (min-width: 981px) { .spec-card .geom { flex: 1; } }
   .spec-card .geom .cell {
     padding: 14px 22px;
     border-right: 1px solid var(--line);
@@ -1314,6 +1350,15 @@
       </a>
     </div>
   </div>
+  <nav class="mobile-nav" aria-label="Sections (mobile)">
+    <div class="row">
+      <a href="#calculator">Calculator</a>
+      <a href="#gels">Gels &amp; Snacks</a>
+      <a href="#gut">Gut Training</a>
+      <a href="#bicarb">Bicarb</a>
+      <a href="#references">Sources</a>
+    </div>
+  </nav>
 </header>
 
 <!-- ============ HERO ============ -->
@@ -2139,15 +2184,20 @@
   // Sync the time slider (in minutes) into the hidden hours/minutes
   // inputs that compute() reads — keeps the original math intact.
   function syncTime() {
-    const tm = parseInt($("time-min").value, 10);
+    const slider = $("time-min");
+    const tm = parseInt(slider.value, 10);
     const h = Math.floor(tm / 60);
     const m = tm % 60;
     $("hours").value = h;
     $("minutes").value = m;
-    $("d-time").textContent = h + ":" + (m < 10 ? "0" + m : m);
+    const label = h + ":" + (m < 10 ? "0" + m : m);
+    $("d-time").textContent = label;
+    slider.setAttribute("aria-valuetext", h + " hours " + m + " minutes");
   }
   function syncMass() {
-    $("d-mass").textContent = $("mass").value;
+    const slider = $("mass");
+    $("d-mass").textContent = slider.value;
+    slider.setAttribute("aria-valuetext", slider.value + " kilograms");
   }
   $("time-min").addEventListener("input", function () { syncTime(); render(); });
   $("mass").addEventListener("input", function () { syncMass(); render(); });
